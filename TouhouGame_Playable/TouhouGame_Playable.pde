@@ -35,7 +35,7 @@ final int FONT_SIZE = 32;
 
 void setup()
 {
-  size(900, 725);
+  size(925, 750);
   smooth();
   strokeWeight(5);
   noStroke();
@@ -87,7 +87,7 @@ void reset()
   enemies.add(e);
   //Enemy e = new EnemyshootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 20, 7.0, 7.0, true);
   //enemies.add(e);
-  while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
+  while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
     e.loc.set(random(width), random(height), 0);
   //terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
 }
@@ -110,17 +110,17 @@ void draw()
   else
     holdKeyTimers[11] = 0;
 
-  if (holdKeyTimers[0] >= 70)
+  if (holdKeyTimers[0] >= 60)
   {
     currentLevel = 0;
     viewingHelpScreen = false;
   }
-  else if (holdKeyTimers[1] >= 70)
+  else if (holdKeyTimers[1] >= 60)
   {
     currentLevel = 1;
     viewingHelpScreen = false;
   }
-  else if (holdKeyTimers[11] >= 70)
+  else if (holdKeyTimers[11] >= 60)
     reset();
   if (viewingHelpScreen)
   {
@@ -229,28 +229,28 @@ void draw()
             {
               Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 60, 19, 7.0, 7.0, true);
               enemies.add(e);
-              while (e.loc.dist (p.loc) <= 500)
+              while (e.loc.dist (p.loc) <= 450)
                 e.loc.set(random(width), random(height), 0);
             }
             else if (i == 1)
             {
               Enemy e = new EnemyShootHeadOn(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 10, 14, 7.0, 2.0, true);
               enemies.add(e);
-              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             }
             else if (i == 2)
             {
               Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 15, 0, 65, 4, 7.0, 8.5, true);
               enemies.add(e);
-              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             }
             else if (i == 3)
             {
               Enemy e = new EnemyShootWigglyBulletSpread(new PVector(), new PVector(random(width), random(height)), 25, 25, -1, 25, 26, .75 * PI, 2.0, 7.5, true);
               enemies.add(e);
-              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             }
             enemyAppearTimes[i] = 0;

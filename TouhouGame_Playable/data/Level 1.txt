@@ -1,0 +1,4 @@
+1:EnemyA~appear(-offscreen,onScreen)~1~1~2;
+2:EnemyA~moveTo(onScreen,-onScreen)~~{1,3}~3;
+3:EnemyA~moveTo(onScreen,onScreen)~~{1,2}~2;
+4:EnemyA~appear(offscreen,onScreen)~~~;
