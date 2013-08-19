@@ -40,7 +40,7 @@ abstract class Enemy
   //Returns true when the enemy survives
   boolean run()
   {
-    vel.setMag(speed);
+    vel.setMag(speed * gameSpeedMultiplier);
     loc.add(vel);
 
     if (p.loc.x > loc.x)
@@ -75,59 +75,59 @@ abstract class Enemy
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     a += TWO_PI / 15;
     spreadLoc.x = m * cos(a);
     spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed * gameSpeedMultiplier, rotateAmount, false));
     shootTimeCurrent = 0;
   }
 

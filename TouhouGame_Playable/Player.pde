@@ -33,7 +33,7 @@ class Player
 
   void run()
   {
-    if (shootTime >= 5 && (mousePressed || autoFire))
+    if (shootTime >= 5 / gameSpeedDivider && (mousePressed || autoFire))
     {
       final int BULLET_SPEED = 999999999;
       PVector direction;
@@ -62,23 +62,21 @@ class Player
     vel.set(0, 0, 0);
 
     if (keys[4])
-      speed = 2;
+      speed = 2 * gameSpeedMultiplier;
     else
-      speed = 5.0;
+      speed = 5.0 * gameSpeedMultiplier;
 
     if (keys[0] || keys[1] || keys[2] || keys[3])
     {
       if (keys[0])
-        vel.x = -speed;
+        vel.x = -speed * gameSpeedMultiplier;
       if (keys[1])
-        vel.x = speed;
+        vel.x = speed * gameSpeedMultiplier;
       if (keys[2])
-        vel.y = -speed;
+        vel.y = -speed * gameSpeedMultiplier;
       if (keys[3])
-      {
-        vel.y = speed;
-      }
-      vel.setMag(speed);
+        vel.y = speed * gameSpeedMultiplier;
+      vel.setMag(speed * gameSpeedMultiplier);
     }
     nextLoc.set(PVector.add(loc, vel));
 

@@ -34,7 +34,7 @@ class Bullet
     if (!madeByPlayer && loc.dist(p.loc) <= bulletSize / 2)
       shouldRestart = true;
 
-    vel.setMag(speed);
+    vel.setMag(speed * gameSpeedMultiplier);
     loc.add(vel);
 
     if (loc.dist(new PVector(width / 2, height / 2)) >= width * 2 + (bulletSize / 2))

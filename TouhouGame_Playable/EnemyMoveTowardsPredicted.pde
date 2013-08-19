@@ -17,9 +17,9 @@ class EnemyMoveTowardsPredicted extends Enemy
     {
       PVector direction;
       if (facingRight)
-        direction = new PVector(99, 0);
+        direction = new PVector(999999999, 0);
       else
-        direction = new PVector(-99, 0);
+        direction = new PVector(-99999999, 0);
       shootBulletStraightTowards(copy(direction), bulletSpeed, 20);
     }
 

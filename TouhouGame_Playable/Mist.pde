@@ -20,11 +20,11 @@ class Mist
 
   void run()
   {
-    a -= int(random(5, 10));
+    a -= int(random(5 * gameSpeedMultiplier, 10 * gameSpeedMultiplier));
     if (a <= 0)
       exists = false;
     PVector locNew = PVector.random2D();
-    locNew.setMag(3);
+    locNew.setMag(3 * gameSpeedMultiplier);
     loc.add(locNew);
   }
 }

@@ -5,7 +5,7 @@ class BulletSplit extends Bullet
   float rotateAmount;
   boolean hasWiggled;
 
-  BulletSplit(PVector vel, PVector loc, int bulletSize,int wiggleAmount, int wiggleChangeTimer, int wiggleChangeDeadline, int splitTimeDeadline, int splitNum, float speed, float rotateAmount, boolean madeByPlayer)
+  BulletSplit(PVector vel, PVector loc, int bulletSize, int wiggleAmount, int wiggleChangeTimer, int wiggleChangeDeadline, int splitTimeDeadline, int splitNum, float speed, float rotateAmount, boolean madeByPlayer)
   {
     super(vel, loc, bulletSize, speed, madeByPlayer);
     this.vel = vel;
@@ -44,7 +44,7 @@ class BulletSplit extends Bullet
       {
         rotateAmount.x = m * cos(a);
         rotateAmount.y = m * sin(a);
-        splitBullets.add(new BulletStraight(copy(rotateAmount), copy(loc), bulletSize, -1, -1, -1, -1, -1, 8.0, 0.0, false));
+        splitBullets.add(new BulletStraight(copy(rotateAmount), copy(loc), bulletSize, -1, -1, -1, -1, -1, 8.0 * gameSpeedMultiplier, 0.0, false));
       }
       splitTimeCurrent = 0;
     }

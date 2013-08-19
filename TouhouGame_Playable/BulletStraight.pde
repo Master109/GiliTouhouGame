@@ -24,9 +24,5 @@ class BulletStraight extends Bullet
   {
     super.run();
   }
-
-  void wiggle()
-  {
-  }
 }
 
