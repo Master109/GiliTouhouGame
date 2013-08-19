@@ -46,7 +46,10 @@ class Bullet
     {
       score += .5;
       graze ++;
+      grazeAhievementCounter ++;
     }
+    else
+      grazeAhievementCounter = 0;
   }
 }
 

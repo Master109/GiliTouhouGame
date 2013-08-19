@@ -1,6 +1,7 @@
 PFont font;
 
 Player p;
+Level1 l1;
 
 ArrayList<Enemy> enemies;
 ArrayList<Bullet> bullets;
@@ -15,6 +16,8 @@ int currentLevel;
 int graze;
 int timesToRun;
 int kills;
+int grazeAhievementCounter;
+int grazeAhievementShowTimer;
 
 float[] enemyAppearTimes;
 float score;
@@ -26,6 +29,7 @@ boolean shouldRestart;
 boolean paused;
 boolean viewingHelpScreen;
 boolean showEffects;
+boolean grazeAhievementEarned;
 
 final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
@@ -42,11 +46,12 @@ void setup()
   rectMode(CENTER);
   background(255);
   currentHelpScreen = 0;
+  grazeAhievementShowTimer = 0;
   keys = new boolean[6];
   autoFire = true;
-  ;
   viewingHelpScreen = true;
   showEffects = true;
+  grazeAhievementEarned = false;
   currentLevel = -1;
   holdKeyTimers = new int[12];
   timesToRun = 1;
@@ -90,11 +95,12 @@ void reset()
   while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
     e.loc.set(random(width), random(height), 0);
   //terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
+  l1 = new Level1();
 }
 
 
 void draw()
-{
+{  
   if (key == '0' || key == ')')
     holdKeyTimers[0] ++;
   else
@@ -114,13 +120,17 @@ void draw()
   {
     currentLevel = 0;
     viewingHelpScreen = false;
-  }
-  else if (holdKeyTimers[1] >= 60)
+    bullets.clear();
+    splitBullets.clear();
+    enemies.clear();
+  } else if (holdKeyTimers[1] >= 60)
   {
     currentLevel = 1;
     viewingHelpScreen = false;
-  }
-  else if (holdKeyTimers[11] >= 60)
+    bullets.clear();
+    splitBullets.clear();
+    enemies.clear();
+  } else if (holdKeyTimers[11] >= 60)
     reset();
   if (viewingHelpScreen)
   {
@@ -147,24 +157,18 @@ void draw()
     {
       text("H: Toggle this boring screen (won't work now, and the puzzle)", width / 2, FONT_SIZE * 16);
       text("to make it work is too hard for u. MUHAHAHAHA!)", width / 2, FONT_SIZE * 17);
-    }
-
-    else if (currentHelpScreen == 1)
+    } else if (currentHelpScreen == 1)
     {
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("It's touching that u returned to this exciting screen for", width / 2, FONT_SIZE * 17);
       text("another joke... but too bad", width / 2, FONT_SIZE * 18);
-    }
-
-    else if (currentHelpScreen == 2)
+    } else if (currentHelpScreen == 2)
     {
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("Ah, now I know alot about u. To come back here you are either", width / 2, FONT_SIZE * 17);
       text("thoughtful or careless. Or someone pressed the button for u. Or", width / 2, FONT_SIZE * 18);
       text("some combination of the three.", width / 2, FONT_SIZE * 19);
-    }
-
-    else if (currentHelpScreen == 3)
+    } else if (currentHelpScreen == 3)
     {
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("Oh, u want to know about me, u ask? You can choose my", width / 2, FONT_SIZE * 17);
@@ -172,19 +176,13 @@ void draw()
       text("surfing, the opposite sex (u can decide if I am male or", width / 2, FONT_SIZE * 19);
       text("female), talking, self-control, driving vehicles, music, circus", width / 2, FONT_SIZE * 20);
       text("toys and sports. Oh yeah, and life.", width / 2, FONT_SIZE * 21);
-    }
-
-    else if (currentHelpScreen == 4)
+    } else if (currentHelpScreen == 4)
     {
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("I'm especially good at music, though. Wanna hear me rap? I", width / 2, FONT_SIZE * 17);
       text("can rap so fast! {Insert name here takes in a huge breath}", width / 2, FONT_SIZE * 18);
-    }
-
-    else if (currentHelpScreen == 5)
-      background(0);
-
-    else if (currentHelpScreen == 6)
+    } else if (currentHelpScreen == 5)
+      background(0); else if (currentHelpScreen == 6)
     {
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("{Insert name here pants heavily} Did you even hear what I said?", width / 2, FONT_SIZE * 17);
@@ -192,7 +190,12 @@ void draw()
     }
   }
   else
-  {    
+  {
+    if (grazeAhievementCounter >= 10)
+      grazeAhievementEarned = true;
+    if (grazeAhievementEarned)
+      grazeAhievementShowTimer ++;
+
     if (currentLevel == 0)
     {
       if (shouldRestart)
@@ -231,22 +234,19 @@ void draw()
               enemies.add(e);
               while (e.loc.dist (p.loc) <= 450)
                 e.loc.set(random(width), random(height), 0);
-            }
-            else if (i == 1)
+            } else if (i == 1)
             {
               Enemy e = new EnemyShootHeadOn(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 10, 14, 7.0, 2.0, true);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
-            }
-            else if (i == 2)
+            } else if (i == 2)
             {
               Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 15, 0, 65, 4, 7.0, 8.5, true);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
-            }
-            else if (i == 3)
+            } else if (i == 3)
             {
               Enemy e = new EnemyShootWigglyBulletSpread(new PVector(), new PVector(random(width), random(height)), 25, 25, -1, 25, 26, .75 * PI, 2.0, 7.5, true);
               enemies.add(e);
@@ -271,7 +271,6 @@ void draw()
           bullets.add(b);
 
         splitBullets.clear();
-
 
         for (Enemy e : enemies)
         {
@@ -315,9 +314,66 @@ void draw()
           p.run();
         p.show();
       }
-    }
-    else if (currentLevel == 1)
+    } else if (currentLevel == 1)
     {
+      l1.createEnemies();
+      for (Bullet b : bullets)
+      {
+        if (!b.exists)
+        {
+          bullets.remove(b);
+          break;
+        }
+      }
+
+      for (Bullet b : splitBullets)
+        bullets.add(b);
+
+      splitBullets.clear();
+
+      ArrayList<Enemy> survivingEnemies = new ArrayList<Enemy>();
+
+      for (Enemy e : enemies)
+      {
+        boolean survived = e.run();
+        if (survived)
+        {
+          e.show();
+          survivingEnemies.add(e);
+        }
+      }
+
+      enemies = survivingEnemies;
+
+      for (int i = 0; i <= mists.size(); i ++)
+      {
+        for (Mist m : mists)
+        {
+          if (!m.exists)
+          {
+            mists.remove(m);
+            break;
+          }
+        }
+      }
+
+      for (Bullet b : bullets)
+      {
+        for (int i = 1; i <= timesToRun; i ++)
+          b.run();
+        b.show();
+      }
+
+      for (Mist m : mists)
+      {
+        for (int i = 1; i <= timesToRun; i ++)
+          m.run();
+        m.show();
+      }
+
+      for (int i = 1; i <= timesToRun; i ++)
+        p.run();
+      p.show();
     }
     textAlign(LEFT, TOP);
     fill(0);
@@ -329,6 +385,11 @@ void draw()
     text(playTimer, width / 2, FONT_SIZE * 3);
     textAlign(RIGHT, TOP);
     text("Bombs: " + bombNum, width, 0);
+    if (grazeAhievementShowTimer >= 180)
+    {
+      textAlign(CENTER, BOTTOM);
+      text("Ahievement unlocked: Graze combo 1", width / 2, height);
+    }
   }
 }
 
