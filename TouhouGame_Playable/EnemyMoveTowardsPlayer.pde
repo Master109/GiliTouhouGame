@@ -15,13 +15,13 @@ class EnemyMoveTowardsPlayer extends Enemy
   {
     if (isTimeToShoot())
     {
-      Bullet b = new BulletSplit(copy(PVector.sub(p.loc, loc)), copy(loc), 20, -1, -1, -1, 90, 20, 7.0, -1.0, false);
+      Bullet b = new BulletSplit(copy(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)), copy(loc), 20, -1, -1, -1, 90, 20, 7.0, -1.0, false);
       bullets.add(b);
 
       shootTimeCurrent = 0;
     }
 
-    moveTowardsYLoc(p.loc);
+    moveTowardsYLoc(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y));
     return super.run();
   }
 }

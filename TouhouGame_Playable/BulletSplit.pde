@@ -36,15 +36,15 @@ class BulletSplit extends Bullet
 
     if (splitTimeCurrent >= splitTimeDeadline)
     {
-      PVector rotateAmount = PVector.sub(p.loc, loc);
+      PVector rotateAmount = PVector.sub(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y), loc);
       exists = false;
       float m = rotateAmount.mag();
 
-      for (float a = rotateAmount.heading2D(); a <= PVector.sub(p.loc, loc).heading2D() + TWO_PI; a += TWO_PI / splitNum)
+      for (float a = rotateAmount.heading2D(); a <= PVector.sub(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y), loc).heading2D() + TWO_PI; a += TWO_PI / splitNum)
       {
         rotateAmount.x = m * cos(a);
         rotateAmount.y = m * sin(a);
-        splitBullets.add(new BulletStraight(copy(rotateAmount), copy(loc), bulletSize, -1, -1, -1, -1, -1, 8.0 * gameSpeedMultiplier, 0.0, false));
+        splitBullets.add(new BulletStraight(copy(rotateAmount), copy(loc), bulletSize, -1, -1, -1, -1, -1, 8.0, 0.0, false));
       }
       splitTimeCurrent = 0;
     }

@@ -24,7 +24,7 @@ class EnemyMoveTowardsPredicted extends Enemy
     }
 
     final int EXPECTED_PLAYER_SPEED = 20;
-    moveTowardsYLoc(PVector.add(p.loc, PVector.mult(p.vel, EXPECTED_PLAYER_SPEED)));
+    moveTowardsYLoc(PVector.add(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y), PVector.mult(p.vel, EXPECTED_PLAYER_SPEED)));
 
     return super.run();
   }

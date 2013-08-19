@@ -10,14 +10,15 @@ ArrayList<Mist> mists;
 float[] enemyAppearDeadlines;
 int[] holdKeyTimers;
 int currentHelpScreen;
-int score;
 int bombNum;
 int currentLevel;
+int graze;
+int timesToRun;
+int kills;
 
 float[] enemyAppearTimes;
+float score;
 float playTimer;
-float gameSpeedMultiplier;
-float gameSpeedDivider;
 
 boolean[] keys;
 boolean autoFire;
@@ -36,19 +37,19 @@ void setup()
 {
   size(900, 725);
   smooth();
-  noStroke();
   strokeWeight(5);
+  noStroke();
   rectMode(CENTER);
   background(255);
   currentHelpScreen = 0;
   keys = new boolean[6];
   autoFire = true;
+  ;
   viewingHelpScreen = true;
   showEffects = true;
   currentLevel = -1;
   holdKeyTimers = new int[12];
-  gameSpeedMultiplier = 1;
-  gameSpeedDivider = 1;
+  timesToRun = 1;
 
   reset();
 }
@@ -63,12 +64,14 @@ void reset()
   playTimer = 0;
   score = 0;
   bombNum = 3;
+  graze = 0;
+  kills = 0;
   enemyAppearTimes = new float[NUM_OF_ENEMY_TYPES];
   enemyAppearDeadlines = new float[NUM_OF_ENEMY_TYPES];
-  enemyAppearDeadlines[0] = 2000 * gameSpeedMultiplier;
-  enemyAppearDeadlines[1] = 1250 * gameSpeedMultiplier;
-  enemyAppearDeadlines[2] = 475 * gameSpeedMultiplier;
-  enemyAppearDeadlines[3] = 2500 * gameSpeedMultiplier;
+  enemyAppearDeadlines[0] = 2000 / timesToRun;
+  enemyAppearDeadlines[1] = 1250 / timesToRun;
+  enemyAppearDeadlines[2] = 475 / timesToRun;
+  enemyAppearDeadlines[3] = 2500 / timesToRun;
 
   p = new Player(new PVector(), new PVector(width / 2, height / 2), new PVector(), 20, 1, 0, 5.0, true);
   bullets = new ArrayList<Bullet>();
@@ -80,11 +83,11 @@ void reset()
   //enemies.add(e);
   //Enemy e = new EnemyShootHeadOn(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 7, 7.0, 2.0, true);
   //enemies.add(e);
-  Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 15, 0, 60, 2, 7.0, 8.5, true);
+  Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 15, 0, 65, 4, 7.0, 8.5, true);
   enemies.add(e);
   //Enemy e = new EnemyshootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 20, 7.0, 7.0, true);
   //enemies.add(e);
-  while (e.loc.dist (p.loc) <= 500)
+  while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
     e.loc.set(random(width), random(height), 0);
   //terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
 }
@@ -107,63 +110,47 @@ void draw()
   else
     holdKeyTimers[11] = 0;
 
-  if (holdKeyTimers[0] >= 75)
+  if (holdKeyTimers[0] >= 70)
   {
     currentLevel = 0;
     viewingHelpScreen = false;
   }
-  else if (holdKeyTimers[1] >= 75)
+  else if (holdKeyTimers[1] >= 70)
   {
     currentLevel = 1;
     viewingHelpScreen = false;
   }
-  else if (holdKeyTimers[11] >= 75)
+  else if (holdKeyTimers[11] >= 70)
     reset();
   if (viewingHelpScreen)
   {
     background(127.5);
     fill(0);
     textAlign(CENTER, TOP);
+    text("Graze bullets and kill enemies to gain score", width / 2, 0);
+    text("W: Move up", width / 2, FONT_SIZE);
+    text("A: Move left", width / 2, FONT_SIZE * 2);
+    text("S: Move down", width / 2, FONT_SIZE * 3);
+    text("D: Move right", width / 2, FONT_SIZE * 4);
+    text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
+    text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
+    text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
+    text("Hold R: Reset", width / 2, FONT_SIZE * 8);
+    text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
+    text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
+    text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
+    text("P: Toggle pause", width / 2, FONT_SIZE * 12);
+    text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
+    text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
+    text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
     if (currentHelpScreen == 0)
     {
-      text("Controls:", width / 2, 0);
-      text("W: Move up", width / 2, FONT_SIZE);
-      text("A: Move left", width / 2, FONT_SIZE * 2);
-      text("S: Move down", width / 2, FONT_SIZE * 3);
-      text("D: Move right", width / 2, FONT_SIZE * 4);
-      text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
-      text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
-      text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
-      text("Hold R: Reset", width / 2, FONT_SIZE * 8);
-      text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
-      text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
-      text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
-      text("P: Toggle pause and visibility of covered text", width / 2, FONT_SIZE * 12);
-      text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
-      text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
-      text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
       text("H: Toggle this boring screen (won't work now, and the puzzle)", width / 2, FONT_SIZE * 16);
       text("to make it work is too hard for u. MUHAHAHAHA!)", width / 2, FONT_SIZE * 17);
     }
 
     else if (currentHelpScreen == 1)
     {
-      text("Controls:", width / 2, 0);
-      text("W: Move up", width / 2, FONT_SIZE);
-      text("A: Move left", width / 2, FONT_SIZE * 2);
-      text("S: Move down", width / 2, FONT_SIZE * 3);
-      text("D: Move right", width / 2, FONT_SIZE * 4);
-      text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
-      text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
-      text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
-      text("Hold R: Reset", width / 2, FONT_SIZE * 8);
-      text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
-      text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
-      text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
-      text("P: Toggle pause and visibility of covered text", width / 2, FONT_SIZE * 12);
-      text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
-      text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
-      text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("It's touching that u returned to this exciting screen for", width / 2, FONT_SIZE * 17);
       text("another joke... but too bad", width / 2, FONT_SIZE * 18);
@@ -171,22 +158,6 @@ void draw()
 
     else if (currentHelpScreen == 2)
     {
-      text("Controls:", width / 2, 0);
-      text("W: Move up", width / 2, FONT_SIZE);
-      text("A: Move left", width / 2, FONT_SIZE * 2);
-      text("S: Move down", width / 2, FONT_SIZE * 3);
-      text("D: Move right", width / 2, FONT_SIZE * 4);
-      text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
-      text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
-      text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
-      text("Hold R: Reset", width / 2, FONT_SIZE * 8);
-      text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
-      text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
-      text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
-      text("P: Toggle pause and visibility of covered text", width / 2, FONT_SIZE * 12);
-      text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
-      text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
-      text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("Ah, now I know alot about u. To come back here you are either", width / 2, FONT_SIZE * 17);
       text("thoughtful or careless. Or someone pressed the button for u. Or", width / 2, FONT_SIZE * 18);
@@ -195,23 +166,6 @@ void draw()
 
     else if (currentHelpScreen == 3)
     {
-      textAlign(CENTER, TOP);
-      text("Controls:", width / 2, 0);
-      text("W: Move up", width / 2, FONT_SIZE);
-      text("A: Move left", width / 2, FONT_SIZE * 2);
-      text("S: Move down", width / 2, FONT_SIZE * 3);
-      text("D: Move right", width / 2, FONT_SIZE * 4);
-      text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
-      text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
-      text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
-      text("Hold R: Reset", width / 2, FONT_SIZE * 8);
-      text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
-      text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
-      text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
-      text("P: Toggle pause and visibility of covered text", width / 2, FONT_SIZE * 12);
-      text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
-      text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
-      text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("Oh, u want to know about me, u ask? You can choose my", width / 2, FONT_SIZE * 17);
       text("name, and I am good at everthing: Video-games, writing,", width / 2, FONT_SIZE * 18);
@@ -222,23 +176,6 @@ void draw()
 
     else if (currentHelpScreen == 4)
     {
-      textAlign(CENTER, TOP);
-      text("Controls:", width / 2, 0);
-      text("W: Move up", width / 2, FONT_SIZE);
-      text("A: Move left", width / 2, FONT_SIZE * 2);
-      text("S: Move down", width / 2, FONT_SIZE * 3);
-      text("D: Move right", width / 2, FONT_SIZE * 4);
-      text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
-      text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
-      text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
-      text("Hold R: Reset", width / 2, FONT_SIZE * 8);
-      text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
-      text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
-      text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
-      text("P: Toggle pause and visibility of covered text", width / 2, FONT_SIZE * 12);
-      text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
-      text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
-      text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("I'm especially good at music, though. Wanna hear me rap? I", width / 2, FONT_SIZE * 17);
       text("can rap so fast! {Insert name here takes in a huge breath}", width / 2, FONT_SIZE * 18);
@@ -249,22 +186,6 @@ void draw()
 
     else if (currentHelpScreen == 6)
     {
-      text("Controls:", width / 2, 0);
-      text("W: Move up", width / 2, FONT_SIZE);
-      text("A: Move left", width / 2, FONT_SIZE * 2);
-      text("S: Move down", width / 2, FONT_SIZE * 3);
-      text("D: Move right", width / 2, FONT_SIZE * 4);
-      text("Left or right arrow key: Face left or right", width / 2, FONT_SIZE * 5);
-      text("Shift: You move slower while pressing it", width / 2, FONT_SIZE * 6);
-      text("Space: Destroy all bullets and enemies on screen for no score", width / 2, FONT_SIZE * 7);
-      text("Hold R: Reset", width / 2, FONT_SIZE * 8);
-      text("Hold F: Toggle autofire", width / 2, FONT_SIZE * 9);
-      text("N: Skip time until next enemy arrives", width / 2, FONT_SIZE * 10);
-      text("T: Toggle faster game speed", width / 2, FONT_SIZE * 11);
-      text("P: Toggle pause and visibility of covered text", width / 2, FONT_SIZE * 12);
-      text("L: Toggle visual-effects (lag)", width / 2, FONT_SIZE * 13);
-      text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 14);
-      text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 15);
       text("H: Toggle this screen", width / 2, FONT_SIZE * 16);
       text("{Insert name here pants heavily} Did you even hear what I said?", width / 2, FONT_SIZE * 17);
       text("I crammed a lot of words together.", width / 2, FONT_SIZE * 18);
@@ -274,77 +195,62 @@ void draw()
   {    
     if (currentLevel == 0)
     {
-      if (paused)
-      {
-        textAlign(LEFT, TOP);
-        fill(0);
-        text("Score: " + score, 0, 0);
-        textAlign(CENTER, TOP);
-        text(playTimer, width / 2, 0);
-        textAlign(RIGHT, TOP);
-        text("Bombs: " + bombNum, width, 0);
-      }
-
       if (shouldRestart)
         return;
 
       if (!paused)
       {
-        playTimer += 1 / frameRate * gameSpeedMultiplier;
+        for (int i = 1; i <= timesToRun; i ++)
+        {
+          playTimer += 1 / frameRate;
+          score += 1 / frameRate;
+        }
 
         ArrayList<Enemy> survivingEnemies = new ArrayList<Enemy>();
 
         for (int i = 0; i <= NUM_OF_ENEMY_TYPES - 1; i ++)
           enemyAppearTimes[i] ++;
 
-        p.move();
+        for (int i = 1; i <= timesToRun; i ++)
+          p.move();
 
         fill(127.5, 175);
         rect(width / 2, height / 2, width, height);
-
-        textAlign(LEFT, TOP);
-        fill(0);
-        text("Score: " + score, 0, 0);
-        textAlign(CENTER, TOP);
-        text(playTimer, width / 2, 0);
-        textAlign(RIGHT, TOP);
-        text("Bombs: " + bombNum, width, 0);
-
 
         for (int i = 0; i <= NUM_OF_ENEMY_TYPES - 1; i ++)
         {
           if (enemyAppearTimes[i] >= enemyAppearDeadlines[i])
           {
-            enemyAppearDeadlines[0] = 2000 * gameSpeedMultiplier;
-            enemyAppearDeadlines[1] = 1250 * gameSpeedMultiplier;
-            enemyAppearDeadlines[2] = 475 * gameSpeedMultiplier;
-            enemyAppearDeadlines[3] = 2500 * gameSpeedMultiplier;
+            enemyAppearDeadlines[0] = 2000 / timesToRun;
+            enemyAppearDeadlines[1] = 1250 / timesToRun;
+            enemyAppearDeadlines[2] = 475 / timesToRun;
+            enemyAppearDeadlines[3] = 2500 / timesToRun;
             if (i == 0)
             {
-              Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 60, 9, 7.0, 7.0, true);
+              Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 60, 19, 7.0, 7.0, true);
               enemies.add(e);
               while (e.loc.dist (p.loc) <= 500)
                 e.loc.set(random(width), random(height), 0);
             }
             else if (i == 1)
             {
-              Enemy e = new EnemyShootHeadOn(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 10, 7, 7.0, 2.0, true);
+              Enemy e = new EnemyShootHeadOn(new PVector(), new PVector(random(width), random(height)), 25, 30, 0, 10, 14, 7.0, 2.0, true);
               enemies.add(e);
-              while (e.loc.dist (p.loc) <= 500)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
                 e.loc.set(random(width), random(height), 0);
             }
             else if (i == 2)
             {
-              Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 15, 0, 60, 2, 7.0, 8.5, true);
+              Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 25, 15, 0, 65, 4, 7.0, 8.5, true);
               enemies.add(e);
-              while (e.loc.dist (p.loc) <= 500)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
                 e.loc.set(random(width), random(height), 0);
             }
             else if (i == 3)
             {
-              Enemy e = new EnemyShootWigglyBulletSpread(new PVector(), new PVector(random(width), random(height)), 25, 25, -1, 25, 15, .75 * PI, 2.0, 7.5, true);
+              Enemy e = new EnemyShootWigglyBulletSpread(new PVector(), new PVector(random(width), random(height)), 25, 25, -1, 25, 26, .75 * PI, 2.0, 7.5, true);
               enemies.add(e);
-              while (e.loc.dist (p.loc) <= 500)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 500)
                 e.loc.set(random(width), random(height), 0);
             }
             enemyAppearTimes[i] = 0;
@@ -365,6 +271,7 @@ void draw()
           bullets.add(b);
 
         splitBullets.clear();
+
 
         for (Enemy e : enemies)
         {
@@ -392,23 +299,36 @@ void draw()
 
         for (Bullet b : bullets)
         {
-          b.run();
+          for (int i = 1; i <= timesToRun; i ++)
+            b.run();
           b.show();
         }
 
         for (Mist m : mists)
         {
-          m.run();
+          for (int i = 1; i <= timesToRun; i ++)
+            m.run();
           m.show();
         }
 
-        p.run();
+        for (int i = 1; i <= timesToRun; i ++)
+          p.run();
         p.show();
       }
     }
     else if (currentLevel == 1)
     {
     }
+    textAlign(LEFT, TOP);
+    fill(0);
+    text("Score: " + score, 0, 0);
+    textAlign(CENTER, TOP);
+    text("Kills: " + kills, width / 2, 0);
+    text("Graze: " + graze, width / 2, FONT_SIZE);
+    text("Time:", width / 2, FONT_SIZE * 2);
+    text(playTimer, width / 2, FONT_SIZE * 3);
+    textAlign(RIGHT, TOP);
+    text("Bombs: " + bombNum, width, 0);
   }
 }
 
@@ -457,16 +377,10 @@ void keyPressed()
   }
   if (key == 't' || key == 'T')
   {
-    if (gameSpeedMultiplier == 1)
-    {
-      gameSpeedMultiplier = 1.25;
-      gameSpeedDivider = gameSpeedMultiplier - 1 / 10;
-    }
+    if (timesToRun == 1)
+      timesToRun = 2;
     else
-    {
-      gameSpeedMultiplier = 1;
-      gameSpeedDivider = 1;
-    }
+      timesToRun = 1;
   }
   if (key == 'h' || key == 'H')
   {

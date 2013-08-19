@@ -14,9 +14,9 @@ class EnemyShootWigglyBulletSpread extends Enemy
   boolean run()
   {
     if (isTimeToShoot())
-      shootBulletWiggleTowards(copy(PVector.sub(p.loc, loc)), copy(loc), PI, PI, 7.5, 0, -1, 10, 30, 7);
+      shootBulletWiggleTowards(copy(PVector.sub(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y), loc)), copy(loc), PI, PI, 7.5, 0, -1, 10, 30, 7);
 
-    moveTowardsLoc(p.loc, 999999999);
+    moveTowardsLoc(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y), 999999999);
     return super.run();
   }
 }

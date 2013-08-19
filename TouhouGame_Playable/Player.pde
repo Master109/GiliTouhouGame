@@ -21,19 +21,29 @@ class Player
   {
     fill(0, 255, 0);
     if (!facingRight)
-      triangle(loc.x - playerSize, loc.y, loc.x + playerSize, loc.y + playerSize, loc.x + playerSize, loc.y - playerSize);
+    {
+      translate(new PVector(loc.x - (playerSize / 2), loc.y));
+      triangle(-playerSize, 0, playerSize, playerSize, playerSize, -playerSize);
+      translate(new PVector(-(loc.x - (playerSize / 2)), -loc.y));
+    }
     else
     {
-      translate(loc.x, loc.y);
+      translate(new PVector(loc.x - (playerSize / 2), loc.y));
       rotate(PI);
       triangle(-playerSize, 0, playerSize, playerSize, playerSize, -playerSize);
-      translate(-loc.x, -loc.y);
+      rotate(-PI);
+      translate(new PVector(-(loc.x - (playerSize / 2)), -loc.y));
     }
+    stroke(255, 0, 0);
+    strokeWeight(10);
+    point(new PVector(loc.x - (playerSize / 2), loc.y));
+    noStroke();
+    strokeWeight(5);
   }
 
   void run()
   {
-    if (shootTime >= 5 / gameSpeedDivider && (mousePressed || autoFire))
+    if (shootTime >= 5 && (mousePressed || autoFire))
     {
       final int BULLET_SPEED = 999999999;
       PVector direction;
@@ -42,7 +52,7 @@ class Player
       else
         direction = new PVector(-BULLET_SPEED, 0);
 
-      bullets.add(new BulletStraight(copy(direction), copy(loc), 5, -1, -1, -1, -1, 10, 8.0, 0.0, true));
+      bullets.add(new BulletStraight(copy(direction), new PVector(loc.x - (playerSize / 2), loc.y), 5, -1, -1, -1, -1, 10, 8.0, 0.0, true));
 
       shootTime = 0;
     }
@@ -53,7 +63,7 @@ class Player
     else if (keyCode == RIGHT)
       facingRight = true;
 
-    if (get(int(p.loc.x), int(p.loc.y)) == ENEMY_COLOR || get(int(p.loc.x), int(p.loc.y)) == BULLET_WIGGLE_COLOR)
+    if (get(int(loc.x - (playerSize / 2)), int(loc.y)) == ENEMY_COLOR || get(int(loc.x - (playerSize / 2)), int(loc.y)) == BULLET_WIGGLE_COLOR)
       shouldRestart = true;
   }
 
@@ -62,21 +72,21 @@ class Player
     vel.set(0, 0, 0);
 
     if (keys[4])
-      speed = 2 * gameSpeedMultiplier;
+      speed = 2;
     else
-      speed = 5.0 * gameSpeedMultiplier;
+      speed = 5.0;
 
     if (keys[0] || keys[1] || keys[2] || keys[3])
     {
       if (keys[0])
-        vel.x = -speed * gameSpeedMultiplier;
+        vel.x = -speed;
       if (keys[1])
-        vel.x = speed * gameSpeedMultiplier;
+        vel.x = speed;
       if (keys[2])
-        vel.y = -speed * gameSpeedMultiplier;
+        vel.y = -speed;
       if (keys[3])
-        vel.y = speed * gameSpeedMultiplier;
-      vel.setMag(speed * gameSpeedMultiplier);
+        vel.y = speed;
+      vel.setMag(speed);
     }
     nextLoc.set(PVector.add(loc, vel));
 

@@ -18,6 +18,8 @@ class Bullet
   void show()
   {
     ellipse(loc, bulletSize);
+    fill(255, 75);
+    ellipse(loc, bulletSize + 25);
   }
 
   void run()
@@ -31,14 +33,20 @@ class Bullet
       }
     }
 
-    if (!madeByPlayer && loc.dist(p.loc) <= bulletSize / 2)
+    if (!madeByPlayer && loc.dist(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)) <= bulletSize / 2)
       shouldRestart = true;
 
-    vel.setMag(speed * gameSpeedMultiplier);
+    vel.setMag(speed);
     loc.add(vel);
 
     if (loc.dist(new PVector(width / 2, height / 2)) >= width * 2 + (bulletSize / 2))
       exists = false;
+
+    if (!madeByPlayer && loc.dist(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)) <= bulletSize / 2 + 12.5)
+    {
+      score += .5;
+      graze ++;
+    }
   }
 }
 

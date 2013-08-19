@@ -27,10 +27,10 @@ class BulletWiggle extends Bullet
 
   void run()
   {
-    vel.limit(speed * gameSpeedMultiplier);
-    if (wiggleChangeTimer >= 15 / gameSpeedDivider)
+    vel.limit(speed);
+    if (wiggleChangeTimer >= 15)
     {
-      float m = 7 * gameSpeedMultiplier;
+      float m = 7;
       if (!hasWiggled)
       {
         wiggleVel.set(vel);

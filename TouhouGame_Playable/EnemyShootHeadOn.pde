@@ -14,9 +14,9 @@ class EnemyShootHeadOn extends Enemy
   boolean run()
   {
     if (isTimeToShoot())
-      shootBulletStraightTowards(copy(p.loc), bulletSpeed, 20);
+      shootBulletStraightTowards(copy(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)), bulletSpeed, 20);
 
-    moveTowardsLoc(p.loc, .3);
+    moveTowardsLoc(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y), .3);
     return super.run();
   }
 }
