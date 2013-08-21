@@ -1,12 +1,15 @@
 abstract class Enemy
 {
-  PVector vel, loc;
-  int enemySize, hp, shootTimeCurrent, shootTimeDeadline, xpValue;
+  PVector vel, loc, wayPoint0, wayPoint1, wayPoint2;
+  int currentWayPoint, enemySize, hp, shootTimeCurrent, shootTimeDeadline, xpValue;
   float speed, bulletSpeed;
-  boolean facingRight;
+  boolean facingRight, destroyAfterDestination;
 
-  Enemy(PVector vel, PVector loc, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, int xpValue, float speed, float bulletSpeed, boolean facingRight)
+  Enemy(PVector wayPoint0, PVector wayPoint1, PVector wayPoint2, PVector vel, PVector loc, int currentWayPoint, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, int xpValue, float speed, float bulletSpeed, boolean facingRight, boolean destroyAfterDestination)
   {
+    this.wayPoint0 = wayPoint0;
+    this.wayPoint1 = wayPoint1;
+    this.wayPoint2 = wayPoint2;
     this.vel = vel;
     this.loc = loc;
     this.enemySize = enemySize;
@@ -17,10 +20,13 @@ abstract class Enemy
     this.speed = speed;
     this.bulletSpeed = bulletSpeed;
     this.facingRight = facingRight;
+    this.destroyAfterDestination = destroyAfterDestination;
   }
 
   void show()
   {
+    fill(127.5);
+    stroke(255, 0, 0);
     ellipse(loc, enemySize);
     if (showEffects)
     {
@@ -40,8 +46,22 @@ abstract class Enemy
   //Returns true when the enemy survives
   boolean run()
   {
+    if (loc.dist(wayPoint2) <= speed && destroyAfterDestination)
+      return false;
+    if (currentWayPoint == 0 && !wayPoint1.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint1, loc));
+    if (currentWayPoint == 1 && !wayPoint2.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(loc, wayPoint2));
+    if (currentWayPoint == 2 && !wayPoint0.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint0, loc));
     vel.setMag(speed);
     loc.add(vel);
+    if (loc.dist(wayPoint0) <= speed && !wayPoint1.equals(NO_WAYPOINT))
+      currentWayPoint = 1;
+    if (loc.dist(wayPoint1) <= speed && !wayPoint2.equals(NO_WAYPOINT))
+      currentWayPoint = 2;
+    if (loc.dist(wayPoint2) <= speed && !wayPoint0.equals(NO_WAYPOINT))
+      currentWayPoint = 0;
 
     if (p.loc.x - (p.playerSize / 2) > loc.x)
       facingRight = true;
@@ -69,67 +89,14 @@ abstract class Enemy
 
   void shootBulletWiggleTowards(PVector targetLoc, PVector wiggleVel, float rotateAmount, float spreadRange, float bulletSpeed, int wiggleChangeDeadline, int wiggleChangeTimer, int wiggleAmount, int bulletSize, int bulletNum)
   {
-    bullets.add(new BulletWiggle(copy(targetLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
     PVector spreadLoc = copy(targetLoc);
     float m = spreadLoc.mag();
-    float a = spreadLoc.heading2D();
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    a += TWO_PI / 15;
-    spreadLoc.x = m * cos(a);
-    spreadLoc.y = m * sin(a);
-    bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
-    shootTimeCurrent = 0;
+    for (float a = spreadLoc.heading2D(); a <= spreadLoc.heading2D() + spreadRange * 2; a += spreadRange / bulletNum)
+    {
+      bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+      spreadLoc.x = m * cos(a);
+      spreadLoc.y = m * sin(a);
+    }
   }
 
   void moveTowardsYLoc(PVector targetLoc)

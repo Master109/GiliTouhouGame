@@ -17,9 +17,10 @@ class Bullet
 
   void show()
   {
+    noStroke();
     ellipse(loc, bulletSize);
-    fill(255, 75);
-    ellipse(loc, bulletSize + 25);
+    fill(255, 70);
+    ellipse(loc, bulletSize + 50);
   }
 
   void run()
@@ -33,6 +34,20 @@ class Bullet
       }
     }
 
+    if (madeByPlayer && loc.dist(b1.loc) <= bulletSize / 2 + (b1.bossSize / 2))
+    {
+      exists = false;
+      b1.hp --;
+    }
+
+    if (b1.hp <= 0)
+    {
+      l1.showBoss = false;
+      levelComplete = true;
+      kills ++;
+      paused = true;
+    }
+
     if (!madeByPlayer && loc.dist(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)) <= bulletSize / 2)
       shouldRestart = true;
 
@@ -42,14 +57,13 @@ class Bullet
     if (loc.dist(new PVector(width / 2, height / 2)) >= width * 2 + (bulletSize / 2))
       exists = false;
 
-    if (!madeByPlayer && loc.dist(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)) <= bulletSize / 2 + 12.5)
+    if (!madeByPlayer && loc.dist(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)) <= bulletSize / 2 + 22.5)
     {
       score += .5;
       graze ++;
-      grazeAhievementCounter ++;
+      if (currentLevel == 0)
+        grazeAhievement1Counter ++;
     }
-    else
-      grazeAhievementCounter = 0;
   }
 }
 

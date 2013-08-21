@@ -12,7 +12,6 @@ class BulletSplit extends Bullet
     this.loc = loc;
     this.bulletSize = bulletSize;
     this.speed = speed;
-    this.exists = true;
     this.madeByPlayer = madeByPlayer;
     this.splitTimeCurrent = 0;
     this.splitTimeCurrent = splitTimeCurrent;
