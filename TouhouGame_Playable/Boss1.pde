@@ -41,8 +41,8 @@ class Boss1 extends Boss
         shootAngleModifier = 0;
         for (int x = 10; x <= width; x += 100)
         {
-          enemies.add(new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, new PVector(x, 200), new PVector(x, 200), new PVector(), new PVector(x, -50), 1, 100, 15, 0, 999999999, 8, 160, 2.0, 8.5, true, true));
-          enemies.add(new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, new PVector(x, 515), new PVector(x, 515), new PVector(), new PVector(x, height + 50), 1, 100, 15, 0, 999999999, 8, 160, 2.0, 8.5, true, true));
+          enemies.add(new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, new PVector(x, 200), new PVector(x, 200), new PVector(), new PVector(x, -50), 1, 100, 999999999, 0, 999999999, 8, 160, 2.0, 8.5, true, true));
+          enemies.add(new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, new PVector(x, 515), new PVector(x, 515), new PVector(), new PVector(x, height + 50), 1, 100, 999999999, 0, 999999999, 8, 160, 2.0, 8.5, true, true));
         }
       }
       timer ++;

@@ -104,12 +104,12 @@ void setup()
   currentLevel = -1;
   holdKeyTimers = new int[12];
   timesToRun = 1;
-  reloadSpeedCost = 1;
+  reloadSpeedCost = 2;
   timeIntoScoreCost = 1;
   timeIntoScoreModifier = 0;
   grazeIntoScoreCost = 1;
   grazeIntoScoreModifier = 0;
-  killsIntoScoreCost = 0;
+  killsIntoScoreCost = 1;
   killsIntoScoreModifier = 0;
   bombNumCost = 5;
   perkPoints = 6;
@@ -121,16 +121,16 @@ void setup()
   highScores.add(0.0);
   highScores.add(10.0);
   buttons = new Button[BUTTON_NUM];
-  buttons[0] = new Button(new PVector(250, 100), 28.5, "Reload Speed - $" + reloadSpeedCost);
-  buttons[1] = new Button(new PVector(250, 200), 28.5, "Unequip", false);
-  buttons[2] = new Button(new PVector(650, 100), 28.5, "Time Into Score - $" + timeIntoScoreCost);  
-  buttons[3] = new Button(new PVector(650, 200), 28.5, "Unequip", false);
-  buttons[4] = new Button(new PVector(650, 300), 28.5, "Graze Into Score - $" + grazeIntoScoreCost);  
-  buttons[5] = new Button(new PVector(650, 400), 28.5, "Unequip", false);
-  buttons[6] = new Button(new PVector(650, 500), 28.5, "Kills Into Score - $" + (killsIntoScoreCost + 1));  
-  buttons[7] = new Button(new PVector(650, 600), 28.5, "Unequip", false);
-  buttons[8] = new Button(new PVector(250, 300), 28.5, "Bombs - $" + bombNumCost);  
-  buttons[9] = new Button(new PVector(250, 400), 28.5, "Unequip", false);
+  buttons[0] = new Button(new PVector(250, 125), 28.5, "Reload Speed - $" + reloadSpeedCost);
+  buttons[1] = new Button(new PVector(250, 225), 28.5, "Unequip", false);
+  buttons[2] = new Button(new PVector(650, 125), 28.5, "Time Into Score - $" + timeIntoScoreCost);  
+  buttons[3] = new Button(new PVector(650, 225), 28.5, "Unequip", false);
+  buttons[4] = new Button(new PVector(650, 325), 28.5, "Graze Into Score - $" + grazeIntoScoreCost);  
+  buttons[5] = new Button(new PVector(650, 425), 28.5, "Unequip", false);
+  buttons[6] = new Button(new PVector(650, 525), 28.5, "Kills Into Score - $" + killsIntoScoreCost);  
+  buttons[7] = new Button(new PVector(650, 625), 28.5, "Unequip", false);
+  buttons[8] = new Button(new PVector(250, 325), 28.5, "Bombs - $" + bombNumCost);  
+  buttons[9] = new Button(new PVector(250, 425), 28.5, "Unequip", false);
 
   reset();
 }
@@ -282,12 +282,14 @@ void draw()
       text("I crammed a lot of words together.", width / 2, FONT_SIZE * 21);
     }
   }
+
   else if (inShop)
   {
     background(127.5);
     textAlign(CENTER, TOP);
     text("Perk points: " + perkPoints, width / 2, 0);
-    text("Improve your score in survival mode by " + int((highScores.get(highScores.size() - 1) - highScores.get(highScores.size() - 2))) + " to earn perk points", width / 2, FONT_SIZE);
+    text("Improve your survival mode score by " + int((highScores.get(highScores.size() - 1) - highScores.get(highScores.size() - 2))) + ", beat levels, or get", width / 2, FONT_SIZE);
+    text("achievements to earn perk points", width / 2, FONT_SIZE * 2);
     for (int i = 0; i < BUTTON_NUM; i ++)
     {
       if (buttons[i].isVisible)
@@ -309,7 +311,7 @@ void draw()
               perkEquiped[2] = 1;
             perkPoints -= timeIntoScoreCost;
             timeIntoScoreCost ++;
-            timeIntoScoreModifier += .05;
+            timeIntoScoreModifier += .075;
             buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
             buttons[3].isVisible = true;
           }
@@ -330,7 +332,7 @@ void draw()
             perkPoints -= killsIntoScoreCost;
             killsIntoScoreCost ++;
             killsIntoScoreModifier += 2.5;
-            buttons[6].text = "Kills Into Score - $" + (killsIntoScoreCost + 1);
+            buttons[6].text = "Kills Into Score - $" + killsIntoScoreCost;
             buttons[7].isVisible = true;
           }
           else if (i == 8 && perkPoints >= bombNumCost)
@@ -417,6 +419,12 @@ void draw()
       }
     }
   }
+
+  if (viewingAchievements)
+  {
+    background(127.5);
+    showAchievementList();
+  }
   if (!viewingHelpScreen && !viewingAchievements && !inShop)
   {
     if (currentLevel == -1)
@@ -492,7 +500,7 @@ void draw()
                 e.loc.set(random(width), random(height), 0);
             }
             enemyAppearTimes[i] = 0;
-            enemyAppearDeadlines[i] *= .95;
+            enemyAppearDeadlines[i] *= .925;
           }
         }
 
@@ -690,12 +698,13 @@ void draw()
     textAlign(RIGHT, TOP);
     text("Bombs: " + bombNum, width, 0);
 
-    showAchievements();
+    showAchievementsNotifications();
 
     if (levelComplete)
     {
       textAlign(CENTER, CENTER);
       text("Congratz!", width / 2, height / 2);
+      perkPoints += 3;
     }
   }
 }

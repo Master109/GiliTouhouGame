@@ -64,7 +64,7 @@ void keyPressed()
     else if (key == 'b' || key == 'B')
       viewingBlendMode = !viewingBlendMode;
   }
-  if (key == 'h' || key == 'H')
+  if ((key == 'h' || key == 'H') && (currentLevel != -1 || viewingAchievements || inShop))
   {
     viewingHelpScreen = !viewingHelpScreen;
     if (viewingHelpScreen)
