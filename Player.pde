@@ -45,7 +45,10 @@ class Player
 
   void run()
   {
-    if (shootTime >= 5 && (mousePressed || autoFire))
+    int reloadSpeed = 1;
+    if (perkEquiped[0] == 1)
+      reloadSpeed = reloadSpeedCost;
+    if (shootTime >= 5 - (reloadSpeed - 1) && (mousePressed || autoFire))
     {
       final int BULLET_SPEED = 999999999;
       PVector direction;

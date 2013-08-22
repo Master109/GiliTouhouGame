@@ -25,8 +25,7 @@ abstract class Enemy
 
   void show()
   {
-    fill(127.5);
-    stroke(255, 0, 0);
+    fill(255, 0, 0);
     ellipse(loc, enemySize);
     if (showEffects)
     {

@@ -62,7 +62,7 @@ class Bullet
       score += .5;
       graze ++;
       if (currentLevel == 0)
-        grazeAhievement1Counter ++;
+        grazeAchievementCounter ++;
     }
   }
 }

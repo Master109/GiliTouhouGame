@@ -29,7 +29,7 @@ class Level1 extends Level
     if (tics == 140 && ticking)
     {
       ticking = false;
-      enemies.add(new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(width / 2, height - 12.5), 0, 25, 60, 0, 999999999, 4, 999999999, 4.0, 5.0, true, false));
+      enemies.add(new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(width / 2, height - 12.5), 0, 25, 60, 0, 999999999, 0, 999999999, 4.0, 5.0, true, false));
     }
     if (enemies.size() == 0 && tics == 140)
       ticking = true;
@@ -40,7 +40,7 @@ class Level1 extends Level
     if (tics == 375 && ticking)
       enemies.add(new EnemyShootHeadOn(NO_WAYPOINT, new PVector(width + 12.5, 185), new PVector(width + 12.5, 185), new PVector(), new PVector(-12.5, 550), 1, 25, 10, 0, 120, 0, 0, 1.0, 5.0, true, true));
     if (tics == 425 && ticking)
-      enemies.add(new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(width / 2 - 170, -12.5), 0, 25, 30, 0, 999999999, 4, .3, 5.5, 0.0, true, false));
+      enemies.add(new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(width / 2 - 170, -12.5), 0, 25, 30, 0, 999999999, 0, .3, 5.5, 0.0, true, false));
     if (tics == 480 && ticking)
       enemies.add(new EnemyShootHeadOn(NO_WAYPOINT, new PVector(-12.5, 250), new PVector(-12.5, 250), new PVector(), new PVector(165, -12.5), 1, 25, 10, 0, 120, 0, 0, .33333333333333333, 5.0, true, true));
     if (tics == 1900 && ticking)

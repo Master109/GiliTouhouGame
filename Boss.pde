@@ -32,8 +32,7 @@ class Boss
 
   void show()
   {
-    fill(127.5);
-    stroke(ENEMY_COLOR);
+    fill(255, 0, 0);
     ellipse(loc, bossSize);
   }
 
