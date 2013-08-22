@@ -24,15 +24,18 @@ int previousGrazeAchievementCounter;
 int notificationShowTimer;
 int reloadSpeedCost;
 int timeIntoScoreCost;
+int grazeIntoScoreCost;
+int killsIntoScoreCost;
+int bombNumCost;
 int perkPoints;
 
 float[] enemyAppearDeadlines;
 float[] enemyAppearTimes;
 float score;
 float timeIntoScoreModifier;
+float grazeIntoScoreModifier;
+float killsIntoScoreModifier;
 float playTimer;
-
-final int NUM_ACHIEVEMENTS = 3;
 
 boolean[] keys;
 boolean autoFire;
@@ -41,15 +44,12 @@ boolean paused;
 boolean viewingHelpScreen;
 boolean showEffects;
 boolean levelComplete;
-
 boolean level1KillsAchievementShow;
 boolean level1Score1AchievementShow;
 
 boolean[] grazeAchievementQueued, grazeAchievementEarned, grazeAchievementShow;
-
 boolean level1KillsAchievementQueued;
 boolean level1Score1AchievementQueued;
-
 boolean level1KillsAchievementEarned;
 boolean level1Score1AchievementEarned;
 boolean viewingBlendMode;
@@ -60,7 +60,8 @@ final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
 final color TERRAIN_COLOR = color(255);
 final int NUM_OF_ENEMY_TYPES = 4;
-final int BUTTON_NUM = 4;
+final int BUTTON_NUM = 10;
+final int NUM_ACHIEVEMENTS = 3;
 final float FONT_SIZE = 28.5;
 final PVector NO_WAYPOINT = new PVector(-1, -1);
 
@@ -82,42 +83,54 @@ void setup()
   perkEquiped[3] = 0;
   currentHelpScreen = 0;
   notificationShowTimer = 0;
+
   keys = new boolean[17];
   autoFire = true;
   viewingHelpScreen = true;
   showEffects = true;
-
   grazeAchievementShow = new boolean[NUM_ACHIEVEMENTS];
   grazeAchievementQueued = new boolean[NUM_ACHIEVEMENTS];
   grazeAchievementEarned = new boolean[NUM_ACHIEVEMENTS];
-
   level1KillsAchievementShow = false;
   level1Score1AchievementShow = false;
   level1KillsAchievementQueued = false;
   level1Score1AchievementQueued = false;
-
   level1KillsAchievementEarned = false;
   level1Score1AchievementEarned = false;
   viewingBlendMode = false;
   viewingAchievements = false;
   inShop = false;
+
   currentLevel = -1;
   holdKeyTimers = new int[12];
   timesToRun = 1;
   reloadSpeedCost = 1;
   timeIntoScoreCost = 1;
   timeIntoScoreModifier = 0;
+  grazeIntoScoreCost = 1;
+  grazeIntoScoreModifier = 0;
+  killsIntoScoreCost = 0;
+  killsIntoScoreModifier = 0;
+  bombNumCost = 5;
   perkPoints = 6;
+
   font = createFont("Arial", FONT_SIZE);
   textFont(font);
+
   highScores = new ArrayList<Float>();
   highScores.add(0.0);
   highScores.add(10.0);
   buttons = new Button[BUTTON_NUM];
-  buttons[0] = new Button(new PVector(250, 100), 28.5, "Reload Speed - $" + reloadSpeedCost, true);
+  buttons[0] = new Button(new PVector(250, 100), 28.5, "Reload Speed - $" + reloadSpeedCost);
   buttons[1] = new Button(new PVector(250, 200), 28.5, "Unequip", false);
-  buttons[2] = new Button(new PVector(650, 100), 28.5, "Time Into Score - $" + timeIntoScoreCost, true);  
+  buttons[2] = new Button(new PVector(650, 100), 28.5, "Time Into Score - $" + timeIntoScoreCost);  
   buttons[3] = new Button(new PVector(650, 200), 28.5, "Unequip", false);
+  buttons[4] = new Button(new PVector(650, 300), 28.5, "Graze Into Score - $" + grazeIntoScoreCost);  
+  buttons[5] = new Button(new PVector(650, 400), 28.5, "Unequip", false);
+  buttons[6] = new Button(new PVector(650, 500), 28.5, "Kills Into Score - $" + (killsIntoScoreCost + 1));  
+  buttons[7] = new Button(new PVector(650, 600), 28.5, "Unequip", false);
+  buttons[8] = new Button(new PVector(250, 300), 28.5, "Bombs - $" + bombNumCost);  
+  buttons[9] = new Button(new PVector(250, 400), 28.5, "Unequip", false);
 
   reset();
 }
@@ -132,6 +145,10 @@ void reset()
     bombNum = 3;
   else
     bombNum = 0;
+  if (perkEquiped[8] == 1)
+    bombNum += bombNumCost - 5;
+  else if (perkEquiped[8] == -1)
+    bombNum -= 3;
   playTimer = 0;
   score = 0;
   graze = 0;
@@ -273,7 +290,7 @@ void draw()
     text("Improve your score in survival mode by " + int((highScores.get(highScores.size() - 1) - highScores.get(highScores.size() - 2))) + " to earn perk points", width / 2, FONT_SIZE);
     for (int i = 0; i < BUTTON_NUM; i ++)
     {
-      if (buttons[i].show)
+      if (buttons[i].isVisible)
       {
         if (buttons[i].pressed)
         {
@@ -284,7 +301,7 @@ void draw()
             perkPoints -= reloadSpeedCost;
             reloadSpeedCost ++;
             buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
-            buttons[1].show = true;
+            buttons[1].isVisible = true;
           }
           else if (i == 2 && perkPoints >= timeIntoScoreCost)
           {
@@ -294,9 +311,38 @@ void draw()
             timeIntoScoreCost ++;
             timeIntoScoreModifier += .05;
             buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
-            buttons[3].show = true;
+            buttons[3].isVisible = true;
           }
-          if (i == 1)
+          else if (i == 4 && perkPoints >= grazeIntoScoreCost)
+          {
+            if (perkEquiped[4] == 0)
+              perkEquiped[4] = 1;
+            perkPoints -= grazeIntoScoreCost;
+            grazeIntoScoreCost ++;
+            grazeIntoScoreModifier += .2;
+            buttons[4].text = "Graze Into Score - $" + grazeIntoScoreCost;
+            buttons[5].isVisible = true;
+          }
+          else if (i == 6 && perkPoints >= killsIntoScoreCost)
+          {
+            if (perkEquiped[6] == 0)
+              perkEquiped[6] = 1;
+            perkPoints -= killsIntoScoreCost;
+            killsIntoScoreCost ++;
+            killsIntoScoreModifier += 2.5;
+            buttons[6].text = "Kills Into Score - $" + (killsIntoScoreCost + 1);
+            buttons[7].isVisible = true;
+          }
+          else if (i == 8 && perkPoints >= bombNumCost)
+          {
+            if (perkEquiped[8] == 0)
+              perkEquiped[8] = 1;
+            perkPoints -= bombNumCost;
+            bombNumCost ++;
+            buttons[8].text = "Bombs - $" + bombNumCost;
+            buttons[9].isVisible = true;
+          }
+          else if (i == 1)
           {
             if (perkEquiped[0] == 1)
             {
@@ -322,7 +368,49 @@ void draw()
               buttons[3].text = "Unequip";
             }
           }
+          else if (i == 5)
+          {
+            if (perkEquiped[4] == 1)
+            {
+              perkEquiped[4] = -1;
+              buttons[5].text = "Equip";
+            }
+            else if (perkEquiped[4] == -1)
+            {
+              perkEquiped[4] = 1;
+              buttons[5].text = "Unequip";
+            }
+          }
+          else if (i == 7)
+          {
+            if (perkEquiped[6] == 1)
+            {
+              perkEquiped[6] = -1;
+              buttons[7].text = "Equip";
+            }
+            else if (perkEquiped[4] == -1)
+            {
+              perkEquiped[6] = 1;
+              buttons[7].text = "Unequip";
+            }
+          }
+          else if (i == 9)
+          {
+            if (perkEquiped[8] == 1)
+            {
+              perkEquiped[8] = -1;
+              buttons[9].text = "Equip";
+              bombNum -= bombNumCost - 5;
+            }
+            else if (perkEquiped[8] == -1)
+            {
+              perkEquiped[8] = 1;
+              buttons[9].text = "Unequip";
+              bombNum += bombNumCost - 5;
+            }
+          }
         }
+
         buttons[i].run();
         buttons[i].show();
         buttons[i].pressed = false;
@@ -472,16 +560,15 @@ void draw()
           p.run();
         p.show();
 
-        for (int index = 0; index < NUM_ACHIEVEMENTS; index++)
+        for (int index = 0; index < NUM_ACHIEVEMENTS; index ++)
         {
-          if (grazeAchievementCounter >= index + 1)
+          if (grazeAchievementCounter >= (index + 1) * 10)
             grazeAchievementQueued[index] = true;
 
           if (!grazeAchievementEarned[index] && grazeAchievementQueued[index])
           {
             grazeAchievementEarned[index] = true;
             grazeAchievementShow[index] = true;
-            print("TRUINGGGGGGGGGGGG");
           }
 
           if (grazeAchievementShow[index])
@@ -605,146 +692,10 @@ void draw()
 
     showAchievements();
 
-    println(notificationShowTimer);
-    for (int index = 0; index < NUM_ACHIEVEMENTS; index++)
-      print(grazeAchievementShow[index]);
-    print('\t');
-    for (int index = 0; index < NUM_ACHIEVEMENTS; index++)
-      print(grazeAchievementEarned[index]);
-
     if (levelComplete)
     {
       textAlign(CENTER, CENTER);
       text("Congratz!", width / 2, height / 2);
-    }
-  }
-}
-
-void keyPressed()
-{
-  if (!viewingHelpScreen && !inShop && !viewingAchievements)
-  {
-    if (key == 'a' || key == 'A')
-      keys[0] = true;
-    else if (key == 'd' || key == 'D')
-      keys[1] = true;
-    else if (key == 'w' || key == 'W')
-      keys[2] = true;
-    else if (key == 's' || key == 'S')
-      keys[3] = true;
-    else if (keyCode == SHIFT)
-      keys[4] = true;
-    else if (key == 'p' || key == 'P')
-      paused = !paused;
-    else if (key == 'r' || key == 'R')
-    {    
-      keys[5] = true;
-      if (shouldRestart)
-        reset();
-    }
-    else if (key == 'f' || key == 'F')
-      autoFire = !autoFire;
-    else if (key == 'n' || key == 'N')
-    {
-      float minEnemyAppearTime = 999999999;
-      boolean shouldBreak = false;
-      for (int i = 0; i <= NUM_OF_ENEMY_TYPES - 1; i ++)
-      {
-        if (enemyAppearDeadlines[i] - enemyAppearTimes[i] < minEnemyAppearTime)
-          minEnemyAppearTime = enemyAppearDeadlines[i] - enemyAppearTimes[i];
-      }
-      for (int i = 0; i <= NUM_OF_ENEMY_TYPES - 1; i ++)
-      {
-        if (minEnemyAppearTime == enemyAppearDeadlines[i] - enemyAppearTimes[i])
-        {
-          for (int i2 = 0; i2 <= NUM_OF_ENEMY_TYPES - 1; i2 ++)
-          {
-            enemyAppearTimes[i2] += minEnemyAppearTime;
-          }
-          shouldBreak = true;
-        }
-        if (shouldBreak)
-          break;
-      }
-    }
-    else if (key == 't' || key == 'T')
-    {
-      if (timesToRun == 1)
-        timesToRun = 2;
-      else
-        timesToRun = 1;
-    }
-    else if (key == 'l' || key == 'L')
-      showEffects = !showEffects;
-    else if (key == ' ' && bombNum > 0 && !paused && !viewingHelpScreen)
-    {
-      bullets.clear();
-      splitBullets.clear();
-      enemies.clear();
-      bombNum --;
-    }
-    else if (key == 'b' || key == 'B')
-      viewingBlendMode = !viewingBlendMode;
-  }
-  if (key == 'h' || key == 'H')
-  {
-    viewingHelpScreen = !viewingHelpScreen;
-    if (viewingHelpScreen)
-    {
-      if (currentHelpScreen < 6)
-        currentHelpScreen ++;
-      else
-        currentHelpScreen = 0;
-    }
-    inShop = false;
-    viewingAchievements = false;
-  }
-  else if (key == 'v' || key == 'V')
-  {
-    viewingAchievements = !viewingAchievements;
-    inShop = false;
-    viewingHelpScreen = false;
-  }
-  else if (key == 'q' || key == 'Q')
-  {
-    inShop = !inShop;
-    viewingHelpScreen = false;
-    viewingAchievements = false;
-  }
-  else if (key == '0' || key == ')')
-    keys[6] = true;
-  else if (key == '1' || key == '@')
-    keys[7] = true;
-}
-
-void keyReleased()
-{
-  if (key == 'a' || key == 'A')
-    keys[0] = false;
-  else if (key == 'd' || key == 'D')
-    keys[1] = false;
-  else if (key == 'w' || key == 'W')
-    keys[2] = false;
-  else if (key == 's' || key == 'S')
-    keys[3] = false;
-  else if (keyCode == SHIFT)
-    keys[4] = false;
-  else if (key == 'r' || key == 'R')
-    keys[5] = false;
-  else if (key == '0' || key == ')')
-    keys[6] = false;
-  else if (key == '1' || key == '@')
-    keys[7] = false;
-}
-
-void mouseReleased()
-{
-  for (int i = 0; i < BUTTON_NUM; i ++)
-  {
-    if (buttons[i].show)
-    {
-      if (buttons[i].beingPressed && mouseX > buttons[i].loc.x - (buttons[i].buttonSize.x / 2) && mouseX < buttons[i].loc.x + (buttons[i].buttonSize.x / 2) && mouseY > buttons[i].loc.y - (buttons[i].buttonSize.y / 2) && mouseY < buttons[i].loc.y + (buttons[i].buttonSize.y / 2))
-        buttons[i].pressed = true;
     }
   }
 }

@@ -2,11 +2,11 @@ class Button
 {
   PVector loc, buttonSize;
   float fontSize;
-  boolean beingPressed, pressed, show;
+  boolean beingPressed, pressed, isVisible;
   color buttonColor;
   String text;
 
-  Button(PVector loc, float fontSize, String text, boolean show)
+  Button(PVector loc, float fontSize, String text, boolean isVisible)
   {
     this.loc = loc;
     this.fontSize = fontSize;
@@ -15,11 +15,20 @@ class Button
     buttonColor = color(100);
     beingPressed = false;
     pressed = false;
-    this.show = show;
+    
+    this.isVisible = isVisible;
+  }
+  
+  Button(PVector loc, float fontSize, String text)
+  {
+    this(loc, fontSize, text, true);
   }
 
   void show()
   {
+    if(!isVisible)
+      return;
+      
     fill(buttonColor);
     rect(loc.x, loc.y, buttonSize.x, buttonSize.y);
     fill(0);

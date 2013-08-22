@@ -15,7 +15,7 @@ class EnemyMoveTowardsPlayer extends Enemy
   {
     if (isTimeToShoot())
     {
-      Bullet b = new BulletSplit(copy(new PVector(p.loc.x - (p.playerSize / 2), p.loc.y)), copy(loc), 20, -1, -1, -1, 90, 20, 7.0, -1.0, false);
+      Bullet b = new BulletSplit(PVector.sub(p.loc, loc), copy(loc), 20, -1, -1, -1, 60, 20, 7.0, -1.0, false);
       bullets.add(b);
 
       shootTimeCurrent = 0;

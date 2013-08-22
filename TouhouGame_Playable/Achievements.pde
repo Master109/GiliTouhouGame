@@ -1,6 +1,6 @@
 void showAchievements()
 {
-  for (int index = 0; index < NUM_ACHIEVEMENTS; index++)
+  for (int index = 0; index < NUM_ACHIEVEMENTS; index ++)
   {
     if (grazeAchievementShow[index])
     {
@@ -44,6 +44,7 @@ void showText(String str, int x, int y)
 {
   textAlign(CENTER, BOTTOM);
   text(str, x, y);
-  
+
   notificationShowTimer++;
 }
+

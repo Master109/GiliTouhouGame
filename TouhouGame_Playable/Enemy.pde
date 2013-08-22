@@ -71,7 +71,10 @@ abstract class Enemy
 
     if (hp <= 0)
     {
-      score += xpValue;
+      float killsIntoScoreModifier2 = 0;
+      if (perkEquiped[6] == 1)
+        killsIntoScoreModifier2 = killsIntoScoreModifier;
+      score += xpValue + killsIntoScoreModifier2;
       kills ++;
       return false;
     }
