@@ -74,18 +74,21 @@ void keyPressed()
       else
         currentHelpScreen = 0;
     }
+    viewingSaveMenu = false;
     inShop = false;
     viewingAchievements = false;
   }
   else if (key == 'v' || key == 'V')
   {
     viewingAchievements = !viewingAchievements;
+    viewingSaveMenu = false;
     inShop = false;
     viewingHelpScreen = false;
   }
   else if (key == 'q' || key == 'Q')
   {
     inShop = !inShop;
+    viewingSaveMenu = false;
     viewingHelpScreen = false;
     viewingAchievements = false;
   }
@@ -93,6 +96,13 @@ void keyPressed()
     keys[6] = true;
   else if (key == '1' || key == '@')
     keys[7] = true;
+  if (keyCode == ENTER)
+  {
+    viewingSaveMenu = !viewingSaveMenu;
+    inShop = false;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+  }
 }
 
 void keyReleased()

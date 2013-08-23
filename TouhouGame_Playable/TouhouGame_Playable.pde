@@ -4,6 +4,8 @@ Player p;
 Level1 l1;
 Boss1 b1;
 
+String[] data;
+
 ArrayList<Enemy> enemies;
 ArrayList<Bullet> bullets, splitBullets;
 ArrayList<Mist> mists;
@@ -55,6 +57,7 @@ boolean level1Score1AchievementEarned;
 boolean viewingBlendMode;
 boolean inShop;
 boolean viewingAchievements;
+boolean viewingSaveMenu;
 
 final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
@@ -62,7 +65,7 @@ final color TERRAIN_COLOR = color(255);
 final int NUM_OF_ENEMY_TYPES = 4;
 final int BUTTON_NUM = 10;
 final int NUM_ACHIEVEMENTS = 3;
-final float FONT_SIZE = 28.5;
+final float FONT_SIZE = 27;
 final PVector NO_WAYPOINT = new PVector(-1, -1);
 
 void setup()
@@ -75,6 +78,8 @@ void setup()
 
   rectMode(CENTER);
   background(255);
+
+  data = new String[99];
 
   perkEquiped = new int[BUTTON_NUM];
   perkEquiped[0] = 0;
@@ -121,16 +126,16 @@ void setup()
   highScores.add(0.0);
   highScores.add(10.0);
   buttons = new Button[BUTTON_NUM];
-  buttons[0] = new Button(new PVector(250, 125), 28.5, "Reload Speed - $" + reloadSpeedCost);
-  buttons[1] = new Button(new PVector(250, 225), 28.5, "Unequip", false);
-  buttons[2] = new Button(new PVector(650, 125), 28.5, "Time Into Score - $" + timeIntoScoreCost);  
-  buttons[3] = new Button(new PVector(650, 225), 28.5, "Unequip", false);
-  buttons[4] = new Button(new PVector(650, 325), 28.5, "Graze Into Score - $" + grazeIntoScoreCost);  
-  buttons[5] = new Button(new PVector(650, 425), 28.5, "Unequip", false);
-  buttons[6] = new Button(new PVector(650, 525), 28.5, "Kills Into Score - $" + killsIntoScoreCost);  
-  buttons[7] = new Button(new PVector(650, 625), 28.5, "Unequip", false);
-  buttons[8] = new Button(new PVector(250, 325), 28.5, "Bombs - $" + bombNumCost);  
-  buttons[9] = new Button(new PVector(250, 425), 28.5, "Unequip", false);
+  buttons[0] = new Button(new PVector(250, 125), FONT_SIZE, "Reload Speed - $" + reloadSpeedCost);
+  buttons[1] = new Button(new PVector(250, 225), FONT_SIZE, "Unequip", false);
+  buttons[2] = new Button(new PVector(650, 125), FONT_SIZE, "Time Into Score - $" + timeIntoScoreCost);  
+  buttons[3] = new Button(new PVector(650, 225), FONT_SIZE, "Unequip", false);
+  buttons[4] = new Button(new PVector(650, 325), FONT_SIZE, "Graze Into Score - $" + grazeIntoScoreCost);  
+  buttons[5] = new Button(new PVector(650, 425), FONT_SIZE, "Unequip", false);
+  buttons[6] = new Button(new PVector(650, 525), FONT_SIZE, "Kills Into Score - $" + killsIntoScoreCost);  
+  buttons[7] = new Button(new PVector(650, 625), FONT_SIZE, "Unequip", false);
+  buttons[8] = new Button(new PVector(250, 325), FONT_SIZE, "Bombs - $" + bombNumCost);  
+  buttons[9] = new Button(new PVector(250, 425), FONT_SIZE, "Unequip", false);
 
   reset();
 }
@@ -239,48 +244,49 @@ void draw()
     text("B: WTF?!", width / 2, FONT_SIZE * 14);
     text("Q: Visit shop", width / 2, FONT_SIZE * 15);
     text("V: View achievements", width / 2, FONT_SIZE * 16);
-    text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 17);
-    text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 18);
+    text("Enter: Enter save menu", width / 2, FONT_SIZE * 17);
+    text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 18);
+    text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 19);
     if (currentHelpScreen == 0)
     {
-      text("H: Toggle this boring screen (won't work now, and the puzzle)", width / 2, FONT_SIZE * 19);
-      text("to make it work is too hard for u. MUHAHAHAHA!)", width / 2, FONT_SIZE * 20);
+      text("H: Toggle this boring screen (won't work now, and the puzzle)", width / 2, FONT_SIZE * 20);
+      text("to make it work is too hard for u. MUHAHAHAHA!)", width / 2, FONT_SIZE * 21);
     }
     else if (currentHelpScreen == 1)
     {
-      text("H: Toggle this screen", width / 2, FONT_SIZE * 19);
-      text("It's touching that u returned to this exciting screen for", width / 2, FONT_SIZE * 20);
-      text("another stupid joke... but too bad", width / 2, FONT_SIZE * 21);
+      text("H: Toggle this screen", width / 2, FONT_SIZE * 20);
+      text("It's touching that u returned to this exciting screen for", width / 2, FONT_SIZE * 21);
+      text("another stupid joke... but too bad", width / 2, FONT_SIZE * 22);
     }
     else if (currentHelpScreen == 2)
     {
-      text("H: Toggle this screen", width / 2, FONT_SIZE * 19);
-      text("Ah, now I know alot about u. To come back here you are either", width / 2, FONT_SIZE * 20);
-      text("thoughtful or careless. Or someone pressed the button for u. Or", width / 2, FONT_SIZE * 21);
-      text("some combination of the three.", width / 2, FONT_SIZE * 22);
+      text("H: Toggle this screen", width / 2, FONT_SIZE * 20);
+      text("Ah, now I know alot about u. To come back here you are either", width / 2, FONT_SIZE * 21);
+      text("thoughtful or careless. Or someone pressed the button for u. Or", width / 2, FONT_SIZE * 22);
+      text("some combination of the three.", width / 2, FONT_SIZE * 23);
     }
     else if (currentHelpScreen == 3)
     {
-      text("H: Toggle this screen", width / 2, FONT_SIZE * 19);
-      text("Oh, u want to know about me, u ask? You can choose my", width / 2, FONT_SIZE * 20);
-      text("name, and I am good at everthing: Video-games, writing,", width / 2, FONT_SIZE * 21);
-      text("surfing, the opposite sex (u can decide if I am male or", width / 2, FONT_SIZE * 22);
-      text("female), talking, self-control, driving vehicles, music, circus", width / 2, FONT_SIZE * 23);
-      text("toys and sports. Oh yeah, and life.", width / 2, FONT_SIZE * 24);
+      text("H: Toggle this screen", width / 2, FONT_SIZE * 20);
+      text("Oh, u want to know about me, u ask? You can choose my", width / 2, FONT_SIZE * 21);
+      text("name, and I am good at everthing: Video-games, writing,", width / 2, FONT_SIZE * 22);
+      text("surfing, the opposite sex (u can decide if I am male or", width / 2, FONT_SIZE * 23);
+      text("female), talking, self-control, driving vehicles, music, circus", width / 2, FONT_SIZE * 24);
+      text("toys and sports. Oh yeah, and life.", width / 2, FONT_SIZE * 25);
     }
     else if (currentHelpScreen == 4)
     {
-      text("H: Toggle this screen", width / 2, FONT_SIZE * 19);
-      text("I'm especially good at music, though. Wanna hear me rap? I", width / 2, FONT_SIZE * 20);
-      text("can rap so fast! {Insert name here takes in a huge breath}", width / 2, FONT_SIZE * 21);
+      text("H: Toggle this screen", width / 2, FONT_SIZE * 20);
+      text("I'm especially good at music, though. Wanna hear me rap? I", width / 2, FONT_SIZE * 21);
+      text("can rap so fast! {Insert name here takes in a huge breath}", width / 2, FONT_SIZE * 22);
     }
     else if (currentHelpScreen == 5)
       background(0); 
     else if (currentHelpScreen == 6)
     {
-      text("H: Toggle this screen", width / 2, FONT_SIZE * 19);
-      text("{Insert name here pants heavily} Did you even hear what I said?", width / 2, FONT_SIZE * 20);
-      text("I crammed a lot of words together.", width / 2, FONT_SIZE * 21);
+      text("H: Toggle this screen", width / 2, FONT_SIZE * 20);
+      text("{Insert name here pants heavily} Did you even hear what I said?", width / 2, FONT_SIZE * 21);
+      text("I crammed a lot of words together.", width / 2, FONT_SIZE * 22);
     }
   }
 
@@ -429,12 +435,18 @@ void draw()
     }
   }
 
-  if (viewingAchievements)
+  else if (viewingAchievements)
   {
     background(127.5);
     showAchievementList();
   }
-  if (!viewingHelpScreen && !viewingAchievements && !inShop)
+
+  else
+  {
+    saveMenu();
+  }
+
+  if (!viewingHelpScreen && !viewingAchievements && !inShop && !viewingSaveMenu)
   {
     if (currentLevel == -1)
       return;
