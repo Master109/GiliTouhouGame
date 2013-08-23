@@ -12,6 +12,7 @@ ArrayList<Mist> mists;
 ArrayList<Float> highScores;
 
 Button[] buttons;
+BackgroundSquare[][] backgroundSquares;
 
 int[] perkEquiped;
 int[] holdKeyTimers;
@@ -68,12 +69,12 @@ final color TERRAIN_COLOR = color(255);
 final int NUM_OF_ENEMY_TYPES = 4;
 final int BUTTON_NUM = 14;
 final int NUM_ACHIEVEMENTS = 3;
+final int BACKGROUND_SQUARE_SPACING = 25;
 final float FONT_SIZE = 27;
 final PVector NO_WAYPOINT = new PVector(-1, -1);
 
 void setup()
 {
-
   size(925, 715, OPENGL);
   smooth();
 
@@ -135,6 +136,7 @@ void setup()
   highScores = new ArrayList<Float>();
   highScores.add(float(data[19]));
   highScores.add(float(data[20]));
+  backgroundSquares = new BackgroundSquare[999][999];
   buttons = new Button[BUTTON_NUM];
   buttons[0] = new Button(new PVector(250, 125), FONT_SIZE, "Reload Speed - $" + reloadSpeedCost);
   buttons[1] = new Button(new PVector(250, 225), FONT_SIZE, "Unequip");
@@ -156,6 +158,14 @@ void setup()
 
 void reset()
 {
+  for (int x = BACKGROUND_SQUARE_SPACING / 2; x <= width; x += BACKGROUND_SQUARE_SPACING)
+  {
+    for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
+    {
+      backgroundSquares[x][y] = new BackgroundSquare(new PVector(x, y), BACKGROUND_SQUARE_SPACING, new int[1]);
+    }
+  }
+
   paused = false;
   shouldRestart = false;
   levelComplete = false;
@@ -201,43 +211,16 @@ void reset()
 
 void draw()
 {
+  showGrid();
+
   for (int i = 0; i < BUTTON_NUM; i ++)
     buttons[i].isVisible = false;
 
   if (viewingBlendMode)
     blendMode(SUBTRACT);
-  if (keys[5])
-    holdKeyTimers[11] ++;
-  else
-    holdKeyTimers[11] = 0;
-  if (keys[6])
-    holdKeyTimers[0] ++;
-  else
-    holdKeyTimers[0] = 0;
-
-  if (keys[7])
-    holdKeyTimers[1] ++;
-  else
-    holdKeyTimers[1] = 0;
-
-  if (holdKeyTimers[0] >= 60)
-  {
-    currentLevel = 0;
-    viewingHelpScreen = false;
-    viewingAchievements = false;
-    inShop = false;
-    reset();
-  }
-  else if (holdKeyTimers[1] >= 60)
-  {
-    currentLevel = 1;
-    viewingHelpScreen = false;
-    viewingAchievements = false;
-    inShop = false;
-    reset();
-  }
-  else if (holdKeyTimers[11] >= 60)
-    reset();
+  
+  keyTimerStuff();
+  
   if (viewingHelpScreen)
   {
     background(127.5);
@@ -379,7 +362,7 @@ void draw()
               perkEquiped[6] = 1;
             perkPoints -= killsIntoScoreCost;
             killsIntoScoreCost ++;
-            killsIntoScoreModifier += 2.2;
+            killsIntoScoreModifier += 2.5;
           }
           else if (i == 8 && perkPoints >= bombNumCost)
           {
@@ -673,6 +656,14 @@ void draw()
 
       if (!paused)
       {
+        for (int x = BACKGROUND_SQUARE_SPACING / 2; x <= width; x += BACKGROUND_SQUARE_SPACING)
+        {
+          for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
+          {
+            backgroundSquares[x][y].run();
+            backgroundSquares[x][y].show();
+          }
+        }
         for (int i = 1; i <= timesToRun; i ++)
         {
           playTimer += 1 / frameRate;
@@ -789,6 +780,18 @@ void draw()
       textAlign(CENTER, CENTER);
       text("Congratz!", width / 2, height / 2);
       perkPoints += 3;
+    }
+  }
+}
+
+void showGrid()
+{
+  for (int x = BACKGROUND_SQUARE_SPACING / 2; x <= width; x += BACKGROUND_SQUARE_SPACING)
+  {
+    for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
+    {
+      backgroundSquares[x][y].run();
+      backgroundSquares[x][y].show();
     }
   }
 }

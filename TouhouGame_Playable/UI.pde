@@ -154,3 +154,39 @@ void mouseReleased()
   }
 }
 
+//This is called by draw
+void keyTimerStuff()
+{
+  if (keys[5])
+    holdKeyTimers[11] ++;
+  else
+    holdKeyTimers[11] = 0;
+  if (keys[6])
+    holdKeyTimers[0] ++;
+  else
+    holdKeyTimers[0] = 0;
+
+  if (keys[7])
+    holdKeyTimers[1] ++;
+  else
+    holdKeyTimers[1] = 0;
+
+  if (holdKeyTimers[0] >= 60)
+  {
+    currentLevel = 0;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+    inShop = false;
+    reset();
+  }
+  else if (holdKeyTimers[1] >= 60)
+  {
+    currentLevel = 1;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+    inShop = false;
+    reset();
+  }
+  else if (holdKeyTimers[11] >= 60)
+    reset();
+}
