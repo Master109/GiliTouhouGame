@@ -92,17 +92,17 @@ void keyPressed()
     viewingHelpScreen = false;
     viewingAchievements = false;
   }
-  else if (key == '0' || key == ')')
-    keys[6] = true;
-  else if (key == '1' || key == '@')
-    keys[7] = true;
-  if (keyCode == ENTER)
+  else if (keyCode == ENTER)
   {
     viewingSaveMenu = !viewingSaveMenu;
     inShop = false;
     viewingHelpScreen = false;
     viewingAchievements = false;
   }
+  else if (key == '0' || key == ')')
+    keys[6] = true;
+  else if (key == '1' || key == '@')
+    keys[7] = true;
 }
 
 void keyReleased()

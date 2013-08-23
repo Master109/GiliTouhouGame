@@ -48,7 +48,6 @@ class Player
     int reloadSpeed = 1;
     if (perkEquiped[0] == 1)
       reloadSpeed = reloadSpeedCost - 1;
-    println(6 - (reloadSpeed - 1));
     if (shootTime >= 6 - (reloadSpeed - 1) && (mousePressed || autoFire))
     {
       final int BULLET_SPEED = 999999999;

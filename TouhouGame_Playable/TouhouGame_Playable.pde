@@ -63,14 +63,15 @@ final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
 final color TERRAIN_COLOR = color(255);
 final int NUM_OF_ENEMY_TYPES = 4;
-final int BUTTON_NUM = 10;
+final int BUTTON_NUM = 12;
 final int NUM_ACHIEVEMENTS = 3;
 final float FONT_SIZE = 27;
 final PVector NO_WAYPOINT = new PVector(-1, -1);
 
 void setup()
 {
-  size(925, 715, P2D, OPENGL);
+
+  size(925, 715, OPENGL);
   smooth();
 
   strokeWeight(5);
@@ -79,15 +80,17 @@ void setup()
   rectMode(CENTER);
   background(255);
 
-  data = new String[99];
+  data = loadStrings("Save Data.txt");
 
   perkEquiped = new int[BUTTON_NUM];
-  perkEquiped[0] = 0;
-  perkEquiped[1] = 0;
-  perkEquiped[2] = 0;
-  perkEquiped[3] = 0;
+  perkEquiped[0] = int(data[14]);
+  perkEquiped[2] = int(data[15]);
+  perkEquiped[4] = int(data[16]);
+  perkEquiped[6] = int(data[17]);
+  perkEquiped[8] = int(data[18]);
   currentHelpScreen = 0;
   notificationShowTimer = 0;
+  perkPoints = int(data[0]);
 
   keys = new boolean[17];
   autoFire = true;
@@ -96,12 +99,14 @@ void setup()
   grazeAchievementShow = new boolean[NUM_ACHIEVEMENTS];
   grazeAchievementQueued = new boolean[NUM_ACHIEVEMENTS];
   grazeAchievementEarned = new boolean[NUM_ACHIEVEMENTS];
+  for (int i = 0; i < NUM_ACHIEVEMENTS; i ++)
+    grazeAchievementEarned[i] = boolean(data[11 + i]);
   level1KillsAchievementShow = false;
   level1Score1AchievementShow = false;
   level1KillsAchievementQueued = false;
   level1Score1AchievementQueued = false;
-  level1KillsAchievementEarned = false;
-  level1Score1AchievementEarned = false;
+  level1KillsAchievementEarned = boolean(data[9]);
+  level1Score1AchievementEarned = boolean(data[10]);
   viewingBlendMode = false;
   viewingAchievements = false;
   inShop = false;
@@ -109,40 +114,40 @@ void setup()
   currentLevel = -1;
   holdKeyTimers = new int[12];
   timesToRun = 1;
-  reloadSpeedCost = 2;
-  timeIntoScoreCost = 1;
-  timeIntoScoreModifier = 0;
-  grazeIntoScoreCost = 1;
-  grazeIntoScoreModifier = 0;
-  killsIntoScoreCost = 1;
-  killsIntoScoreModifier = 0;
-  bombNumCost = 5;
-  perkPoints = 6;
+  reloadSpeedCost = int(data[1]);
+  timeIntoScoreCost = int(data[2]);
+  timeIntoScoreModifier = int(data[3]);
+  grazeIntoScoreCost = int(data[4]);
+  grazeIntoScoreModifier = int(data[5]);
+  killsIntoScoreCost = int(data[6]);
+  killsIntoScoreModifier = int(data[7]);
+  bombNumCost = int(data[8]);
 
   font = createFont("Arial", FONT_SIZE);
   textFont(font);
 
   highScores = new ArrayList<Float>();
-  highScores.add(0.0);
-  highScores.add(10.0);
+  highScores.add(float(data[19]));
+  highScores.add(float(data[20]));
   buttons = new Button[BUTTON_NUM];
   buttons[0] = new Button(new PVector(250, 125), FONT_SIZE, "Reload Speed - $" + reloadSpeedCost);
-  buttons[1] = new Button(new PVector(250, 225), FONT_SIZE, "Unequip", false);
+  buttons[1] = new Button(new PVector(250, 225), FONT_SIZE, "Unequip");
   buttons[2] = new Button(new PVector(650, 125), FONT_SIZE, "Time Into Score - $" + timeIntoScoreCost);  
-  buttons[3] = new Button(new PVector(650, 225), FONT_SIZE, "Unequip", false);
+  buttons[3] = new Button(new PVector(650, 225), FONT_SIZE, "Unequip");
   buttons[4] = new Button(new PVector(650, 325), FONT_SIZE, "Graze Into Score - $" + grazeIntoScoreCost);  
-  buttons[5] = new Button(new PVector(650, 425), FONT_SIZE, "Unequip", false);
+  buttons[5] = new Button(new PVector(650, 425), FONT_SIZE, "Unequip");
   buttons[6] = new Button(new PVector(650, 525), FONT_SIZE, "Kills Into Score - $" + killsIntoScoreCost);  
-  buttons[7] = new Button(new PVector(650, 625), FONT_SIZE, "Unequip", false);
+  buttons[7] = new Button(new PVector(650, 625), FONT_SIZE, "Unequip");
   buttons[8] = new Button(new PVector(250, 325), FONT_SIZE, "Bombs - $" + bombNumCost);  
-  buttons[9] = new Button(new PVector(250, 425), FONT_SIZE, "Unequip", false);
+  buttons[9] = new Button(new PVector(250, 425), FONT_SIZE, "Unequip");
+  buttons[10] = new Button(new PVector(width / 2 - 100, height / 2), FONT_SIZE, "Save");  
+  buttons[11] = new Button(new PVector(width / 2 + 100, height / 2), FONT_SIZE, "Reset");
 
   reset();
 }
 
 void reset()
 {
-
   paused = false;
   shouldRestart = false;
   levelComplete = false;
@@ -188,6 +193,9 @@ void reset()
 
 void draw()
 {
+  for (int i = 0; i < BUTTON_NUM; i ++)
+    buttons[i].isVisible = false;
+
   if (viewingBlendMode)
     blendMode(SUBTRACT);
   if (keys[5])
@@ -244,7 +252,7 @@ void draw()
     text("B: WTF?!", width / 2, FONT_SIZE * 14);
     text("Q: Visit shop", width / 2, FONT_SIZE * 15);
     text("V: View achievements", width / 2, FONT_SIZE * 16);
-    text("Enter: Enter save menu", width / 2, FONT_SIZE * 17);
+    text("Enter: Enter save and load menu", width / 2, FONT_SIZE * 17);
     text("Hold 0: Play survival mode!", width / 2, FONT_SIZE * 18);
     text("Hold 1-9: Play corresponding level in level mode!", width / 2, FONT_SIZE * 19);
     if (currentHelpScreen == 0)
@@ -297,6 +305,22 @@ void draw()
     text("Perk points: " + perkPoints, width / 2, 0);
     text("Improve your survival mode score by " + int((highScores.get(highScores.size() - 1) - highScores.get(highScores.size() - 2))) + ", beat levels, or get", width / 2, FONT_SIZE);
     text("achievements to earn perk points", width / 2, FONT_SIZE * 2);
+    buttons[0].isVisible = true;
+    buttons[2].isVisible = true;
+    buttons[4].isVisible = true;
+    buttons[6].isVisible = true;
+    buttons[8].isVisible = true;
+    buttons[0].isVisible = true;
+    if (reloadSpeedCost > 2)
+      buttons[1].isVisible = true; 
+    if (timeIntoScoreCost > 1)
+      buttons[3].isVisible = true; 
+    if (grazeIntoScoreCost > 1)
+      buttons[5].isVisible = true;   
+    if (killsIntoScoreCost > 1)
+      buttons[7].isVisible = true;
+    if (bombNumCost > 5)
+      buttons[9].isVisible = true;
     for (int i = 0; i < BUTTON_NUM; i ++)
     {
       if (buttons[i].isVisible)
@@ -305,19 +329,12 @@ void draw()
         {
           if (i == 0 && perkPoints >= reloadSpeedCost)
           {
-            if (reloadSpeedCost == 6)
-            {            
-              buttons[0].text = "Reload Speed (MAX)";
-              perkEquiped[0] = 2;
-            }
-            else
+            if (reloadSpeedCost <= 6)
             {
               if (perkEquiped[0] == 0)
                 perkEquiped[0] = 1;
               perkPoints -= reloadSpeedCost;
               reloadSpeedCost ++;
-              buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
-              buttons[1].isVisible = true;
             }
           }
           else if (i == 2 && perkPoints >= timeIntoScoreCost)
@@ -327,8 +344,6 @@ void draw()
             perkPoints -= timeIntoScoreCost;
             timeIntoScoreCost ++;
             timeIntoScoreModifier += .08;
-            buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
-            buttons[3].isVisible = true;
           }
           else if (i == 4 && perkPoints >= grazeIntoScoreCost)
           {
@@ -337,8 +352,6 @@ void draw()
             perkPoints -= grazeIntoScoreCost;
             grazeIntoScoreCost ++;
             grazeIntoScoreModifier += .225;
-            buttons[4].text = "Graze Into Score - $" + grazeIntoScoreCost;
-            buttons[5].isVisible = true;
           }
           else if (i == 6 && perkPoints >= killsIntoScoreCost)
           {
@@ -347,8 +360,6 @@ void draw()
             perkPoints -= killsIntoScoreCost;
             killsIntoScoreCost ++;
             killsIntoScoreModifier += 2.25;
-            buttons[6].text = "Kills Into Score - $" + killsIntoScoreCost;
-            buttons[7].isVisible = true;
           }
           else if (i == 8 && perkPoints >= bombNumCost)
           {
@@ -356,83 +367,84 @@ void draw()
               perkEquiped[8] = 1;
             perkPoints -= bombNumCost;
             bombNumCost ++;
-            buttons[8].text = "Bombs - $" + bombNumCost;
-            buttons[9].isVisible = true;
           }
           else if (i == 1)
           {
             if (perkEquiped[0] == 1)
-            {
               perkEquiped[0] = -1;
-              buttons[1].text = "Equip";
-            }
             else if (perkEquiped[0] == -1)
-            {
               perkEquiped[0] = 1;
-              buttons[1].text = "Unequip";
-            }
           }
           else if (i == 3)
           {
             if (perkEquiped[2] == 1)
-            {
               perkEquiped[2] = -1;
-              buttons[3].text = "Equip";
-            }
             else if (perkEquiped[2] == -1)
-            {
               perkEquiped[2] = 1;
-              buttons[3].text = "Unequip";
-            }
           }
           else if (i == 5)
           {
             if (perkEquiped[4] == 1)
-            {
               perkEquiped[4] = -1;
-              buttons[5].text = "Equip";
-            }
             else if (perkEquiped[4] == -1)
-            {
               perkEquiped[4] = 1;
-              buttons[5].text = "Unequip";
-            }
           }
           else if (i == 7)
           {
             if (perkEquiped[6] == 1)
-            {
               perkEquiped[6] = -1;
-              buttons[7].text = "Equip";
-            }
             else if (perkEquiped[4] == -1)
-            {
               perkEquiped[6] = 1;
-              buttons[7].text = "Unequip";
-            }
           }
           else if (i == 9)
           {
             if (perkEquiped[8] == 1)
             {
               perkEquiped[8] = -1;
-              buttons[9].text = "Equip";
               bombNum -= bombNumCost - 5;
             }
             else if (perkEquiped[8] == -1)
             {
               perkEquiped[8] = 1;
-              buttons[9].text = "Unequip";
               bombNum += bombNumCost - 5;
             }
           }
         }
-
         buttons[i].run();
         buttons[i].show();
         buttons[i].pressed = false;
       }
     }
+    if (reloadSpeedCost == 6)
+    {            
+      buttons[0].text = "Reload Speed (MAX)";
+      perkEquiped[0] = 2;
+    }
+    buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
+    buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
+    buttons[4].text = "Graze Into Score - $" + grazeIntoScoreCost;
+    buttons[6].text = "Kills Into Score - $" + killsIntoScoreCost;
+    buttons[8].text = "Bombs - $" + bombNumCost;
+    if (perkEquiped[0] == -1)
+      buttons[1].text = "Equip";
+    else if (perkEquiped[0] == 1)
+      buttons[1].text = "Unequip";
+    if (perkEquiped[2] == -1)
+      buttons[3].text = "Equip";
+    else if (perkEquiped[2] == 1)
+      buttons[3].text = "Unequip";
+    if (perkEquiped[4] == -1)
+      buttons[5].text = "Equip";
+    else if (perkEquiped[4] == 1)
+      buttons[5].text = "Unequip";
+    if (perkEquiped[6] == -1)
+      buttons[7].text = "Equip";
+    else if (perkEquiped[6] == 1)
+      buttons[7].text = "Unequip";
+    if (perkEquiped[8] == -1)
+      buttons[9].text = "Equip";
+    else if (perkEquiped[8] == 1)
+      buttons[9].text = "Unequip";
   }
 
   else if (viewingAchievements)
@@ -441,9 +453,27 @@ void draw()
     showAchievementList();
   }
 
-  else
+  else if (viewingSaveMenu)
   {
-    saveMenu();
+    background(127.5);
+    buttons[10].isVisible = true;
+    buttons[11].isVisible = true;
+    for (int i = 0; i < BUTTON_NUM; i ++)
+    {
+      if (buttons[i].isVisible)
+      {
+        if (buttons[i].pressed)
+        {
+          if (i == 10)
+            saveMenu();
+          if (i == 11)
+            data = loadStrings("Initial Data.txt");
+        }
+        buttons[i].run();
+        buttons[i].show();
+        buttons[i].pressed = false;
+      }
+    }
   }
 
   if (!viewingHelpScreen && !viewingAchievements && !inShop && !viewingSaveMenu)

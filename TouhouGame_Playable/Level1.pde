@@ -7,7 +7,6 @@ class Level1 extends Level
 
   void createEnemies()
   {
-    println(tics);
     if (enemies.size() == 0 && tics < 840 && tics > 0)
       tics = 840;
 

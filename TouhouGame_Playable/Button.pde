@@ -6,7 +6,7 @@ class Button
   color buttonColor;
   String text;
 
-  Button(PVector loc, float fontSize, String text, boolean isVisible)
+  Button(PVector loc, float fontSize, String text)
   {
     this.loc = loc;
     this.fontSize = fontSize;
@@ -15,20 +15,14 @@ class Button
     buttonColor = color(100);
     beingPressed = false;
     pressed = false;
-    
-    this.isVisible = isVisible;
-  }
-  
-  Button(PVector loc, float fontSize, String text)
-  {
-    this(loc, fontSize, text, true);
+    isVisible = false;
   }
 
   void show()
   {
-    if(!isVisible)
+    if (!isVisible)
       return;
-      
+
     fill(buttonColor);
     rect(loc.x, loc.y, buttonSize.x, buttonSize.y);
     fill(0);
