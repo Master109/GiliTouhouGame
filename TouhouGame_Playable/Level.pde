@@ -1,19 +1,17 @@
 class Level
 {
   int tics;
-  boolean ticking, showBoss;
+  boolean showBoss;
 
   public Level()
   {
-    ticking = true;
     showBoss = false;
     tics = 0;
   }
 
   void createEnemies()
   {
-    if (ticking)
-      tics ++;
+    tics ++;
   }
 }
 

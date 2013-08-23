@@ -112,7 +112,7 @@ void setup()
   killsIntoScoreCost = 1;
   killsIntoScoreModifier = 0;
   bombNumCost = 5;
-  perkPoints = 6;
+  perkPoints = 100;
 
   font = createFont("Arial", FONT_SIZE);
   textFont(font);
@@ -137,6 +137,7 @@ void setup()
 
 void reset()
 {
+
   paused = false;
   shouldRestart = false;
   levelComplete = false;
@@ -298,12 +299,20 @@ void draw()
         {
           if (i == 0 && perkPoints >= reloadSpeedCost)
           {
-            if (perkEquiped[0] == 0)
-              perkEquiped[0] = 1;
-            perkPoints -= reloadSpeedCost;
-            reloadSpeedCost ++;
-            buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
-            buttons[1].isVisible = true;
+            if (reloadSpeedCost == 6)
+            {            
+              buttons[0].text = "Reload Speed (MAX)";
+              perkEquiped[0] = 2;
+            }
+            else
+            {
+              if (perkEquiped[0] == 0)
+                perkEquiped[0] = 1;
+              perkPoints -= reloadSpeedCost;
+              reloadSpeedCost ++;
+              buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
+              buttons[1].isVisible = true;
+            }
           }
           else if (i == 2 && perkPoints >= timeIntoScoreCost)
           {
@@ -311,7 +320,7 @@ void draw()
               perkEquiped[2] = 1;
             perkPoints -= timeIntoScoreCost;
             timeIntoScoreCost ++;
-            timeIntoScoreModifier += .075;
+            timeIntoScoreModifier += .08;
             buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
             buttons[3].isVisible = true;
           }
@@ -321,7 +330,7 @@ void draw()
               perkEquiped[4] = 1;
             perkPoints -= grazeIntoScoreCost;
             grazeIntoScoreCost ++;
-            grazeIntoScoreModifier += .2;
+            grazeIntoScoreModifier += .225;
             buttons[4].text = "Graze Into Score - $" + grazeIntoScoreCost;
             buttons[5].isVisible = true;
           }
@@ -331,7 +340,7 @@ void draw()
               perkEquiped[6] = 1;
             perkPoints -= killsIntoScoreCost;
             killsIntoScoreCost ++;
-            killsIntoScoreModifier += 2.5;
+            killsIntoScoreModifier += 2.25;
             buttons[6].text = "Kills Into Score - $" + killsIntoScoreCost;
             buttons[7].isVisible = true;
           }
