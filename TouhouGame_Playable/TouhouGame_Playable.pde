@@ -29,6 +29,7 @@ int timeIntoScoreCost;
 int grazeIntoScoreCost;
 int killsIntoScoreCost;
 int bombNumCost;
+int bulletSprayCost;
 int perkPoints;
 
 float[] enemyAppearDeadlines;
@@ -38,6 +39,7 @@ float timeIntoScoreModifier;
 float grazeIntoScoreModifier;
 float killsIntoScoreModifier;
 float playTimer;
+float bulletSprayRange;
 
 boolean[] keys;
 boolean autoFire;
@@ -48,6 +50,7 @@ boolean showEffects;
 boolean levelComplete;
 boolean level1KillsAchievementShow;
 boolean level1Score1AchievementShow;
+boolean level1Complete;
 
 boolean[] grazeAchievementQueued, grazeAchievementEarned, grazeAchievementShow;
 boolean level1KillsAchievementQueued;
@@ -63,7 +66,7 @@ final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
 final color TERRAIN_COLOR = color(255);
 final int NUM_OF_ENEMY_TYPES = 4;
-final int BUTTON_NUM = 12;
+final int BUTTON_NUM = 14;
 final int NUM_ACHIEVEMENTS = 3;
 final float FONT_SIZE = 27;
 final PVector NO_WAYPOINT = new PVector(-1, -1);
@@ -88,6 +91,7 @@ void setup()
   perkEquiped[4] = int(data[16]);
   perkEquiped[6] = int(data[17]);
   perkEquiped[8] = int(data[18]);
+  perkEquiped[12] = int(data[21]);
   currentHelpScreen = 0;
   notificationShowTimer = 0;
   perkPoints = int(data[0]);
@@ -110,6 +114,7 @@ void setup()
   viewingBlendMode = false;
   viewingAchievements = false;
   inShop = false;
+  level1Complete = boolean(data[22]);
 
   currentLevel = -1;
   holdKeyTimers = new int[12];
@@ -122,6 +127,7 @@ void setup()
   killsIntoScoreCost = int(data[6]);
   killsIntoScoreModifier = int(data[7]);
   bombNumCost = int(data[8]);
+  bulletSprayCost = 4;
 
   font = createFont("Arial", FONT_SIZE);
   textFont(font);
@@ -142,6 +148,8 @@ void setup()
   buttons[9] = new Button(new PVector(250, 425), FONT_SIZE, "Unequip");
   buttons[10] = new Button(new PVector(width / 2 - 100, height / 2), FONT_SIZE, "Save");  
   buttons[11] = new Button(new PVector(width / 2 + 100, height / 2), FONT_SIZE, "Reset");
+  buttons[12] = new Button(new PVector(250, 525), FONT_SIZE, "Bullet Spread - $" + bulletSprayCost);  
+  buttons[13] = new Button(new PVector(250, 625), FONT_SIZE, "Unequip [Up or Down]");
 
   reset();
 }
@@ -310,7 +318,7 @@ void draw()
     buttons[4].isVisible = true;
     buttons[6].isVisible = true;
     buttons[8].isVisible = true;
-    buttons[0].isVisible = true;
+    buttons[12].isVisible = true;
     if (reloadSpeedCost > 2)
       buttons[1].isVisible = true; 
     if (timeIntoScoreCost > 1)
@@ -321,6 +329,8 @@ void draw()
       buttons[7].isVisible = true;
     if (bombNumCost > 5)
       buttons[9].isVisible = true;
+    if (bulletSprayCost > 4)
+      buttons[13].isVisible = true;
     for (int i = 0; i < BUTTON_NUM; i ++)
     {
       if (buttons[i].isVisible)
@@ -337,13 +347,23 @@ void draw()
               reloadSpeedCost ++;
             }
           }
+          else if (i == 12 && perkPoints >= bulletSprayCost)
+          {
+            if (bulletSprayCost <= 4)
+            {
+              if (perkEquiped[12] == 0)
+                perkEquiped[12] = 1;
+              perkPoints -= bulletSprayCost;
+              bulletSprayCost ++;
+            }
+          }
           else if (i == 2 && perkPoints >= timeIntoScoreCost)
           {
             if (perkEquiped[2] == 0)
               perkEquiped[2] = 1;
             perkPoints -= timeIntoScoreCost;
             timeIntoScoreCost ++;
-            timeIntoScoreModifier += .08;
+            timeIntoScoreModifier += .09;
           }
           else if (i == 4 && perkPoints >= grazeIntoScoreCost)
           {
@@ -359,7 +379,7 @@ void draw()
               perkEquiped[6] = 1;
             perkPoints -= killsIntoScoreCost;
             killsIntoScoreCost ++;
-            killsIntoScoreModifier += 2.25;
+            killsIntoScoreModifier += 2.2;
           }
           else if (i == 8 && perkPoints >= bombNumCost)
           {
@@ -393,7 +413,7 @@ void draw()
           {
             if (perkEquiped[6] == 1)
               perkEquiped[6] = -1;
-            else if (perkEquiped[4] == -1)
+            else if (perkEquiped[6] == -1)
               perkEquiped[6] = 1;
           }
           else if (i == 9)
@@ -409,22 +429,35 @@ void draw()
               bombNum += bombNumCost - 5;
             }
           }
+          else if (i == 13)
+          {
+            if (perkEquiped[12] == 1)
+            {
+              perkEquiped[12] = -1;
+              bulletSprayRange = 0;
+            }
+            else if (perkEquiped[12] == -1)
+            {
+              perkEquiped[12] = 1;
+              bulletSprayRange = HALF_PI;
+            }
+          }
         }
         buttons[i].run();
         buttons[i].show();
         buttons[i].pressed = false;
       }
     }
-    if (reloadSpeedCost == 6)
-    {            
-      buttons[0].text = "Reload Speed (MAX)";
-      perkEquiped[0] = 2;
-    }
     buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
     buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
     buttons[4].text = "Graze Into Score - $" + grazeIntoScoreCost;
     buttons[6].text = "Kills Into Score - $" + killsIntoScoreCost;
     buttons[8].text = "Bombs - $" + bombNumCost;
+    buttons[12].text = "Bullet Spread - $" + bulletSprayCost;
+    if (reloadSpeedCost == 7)
+      buttons[0].text = "Reload Speed (MAX)";
+    if (bulletSprayCost == 5)
+      buttons[12].text = "Bullet Spread (MAX)";
     if (perkEquiped[0] == -1)
       buttons[1].text = "Equip";
     else if (perkEquiped[0] == 1)
@@ -445,6 +478,10 @@ void draw()
       buttons[9].text = "Equip";
     else if (perkEquiped[8] == 1)
       buttons[9].text = "Unequip";
+    if (perkEquiped[12] == -1)
+      buttons[13].text = "Equip [Up / Down]";
+    else if (perkEquiped[12] == 1)
+      buttons[13].text = "Unequip [Up / Down]";
   }
 
   else if (viewingAchievements)
@@ -458,22 +495,16 @@ void draw()
     background(127.5);
     buttons[10].isVisible = true;
     buttons[11].isVisible = true;
-    for (int i = 0; i < BUTTON_NUM; i ++)
-    {
-      if (buttons[i].isVisible)
-      {
-        if (buttons[i].pressed)
-        {
-          if (i == 10)
-            saveMenu();
-          if (i == 11)
-            data = loadStrings("Initial Data.txt");
-        }
-        buttons[i].run();
-        buttons[i].show();
-        buttons[i].pressed = false;
-      }
-    }
+    if (buttons[10].pressed && buttons[10].isVisible)
+      saveMenu();
+    if (buttons[11].pressed && buttons[11].isVisible)
+      data = loadStrings("Initial Data.txt");
+    buttons[10].run();
+    buttons[10].show();
+    buttons[11].run();
+    buttons[11].show();
+    buttons[10].pressed = false;
+    buttons[11].pressed = false;
   }
 
   if (!viewingHelpScreen && !viewingAchievements && !inShop && !viewingSaveMenu)
@@ -753,6 +784,8 @@ void draw()
 
     if (levelComplete)
     {
+      if (currentLevel == 1)
+        level1Complete = true;
       textAlign(CENTER, CENTER);
       text("Congratz!", width / 2, height / 2);
       perkPoints += 3;

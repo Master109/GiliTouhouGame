@@ -1,8 +1,8 @@
 class Player
 {
   PVector vel, loc, nextLoc;
-  int playerSize, hp, shootTime;
-  float speed;
+  int playerSize, hp, shootTime, shootState;
+  float speed, shootAngle;
   boolean facingRight;
 
   Player(PVector vel, PVector loc, PVector nextLoc, int playerSize, int hp, int shootTime, float speed, boolean facingRight)
@@ -15,6 +15,7 @@ class Player
     this.shootTime = shootTime;
     this.speed = speed;
     this.facingRight = facingRight;
+    shootState = 1;
   }
 
   void show()
@@ -56,6 +57,28 @@ class Player
         direction = new PVector(BULLET_SPEED, 0);
       else
         direction = new PVector(-BULLET_SPEED, 0);
+
+      if (perkEquiped[12] == 1)
+        bulletSprayRange = PI / 10;
+      else if (perkEquiped[12] == -1)
+        bulletSprayRange = 0;
+
+      float m = direction.mag();
+      float a = direction.heading2D();
+      if (perkEquiped[12] == 1)
+      {
+        if (shootAngle > bulletSprayRange)
+          shootState = 1;
+        else if (shootAngle < -bulletSprayRange)
+          shootState = -1;
+        if (shootState == -1)
+          shootAngle += bulletSprayRange / 7.5;
+        if (shootState == 1)
+          shootAngle -= bulletSprayRange / 7.5;
+      }
+      a += shootAngle;
+      direction.x = m * cos(a);
+      direction.y = m * sin(a);
 
       bullets.add(new BulletStraight(copy(direction), new PVector(loc.x - (playerSize / 2), loc.y), 5, -1, -1, -1, -1, 10, 8.0, 0.0, true));
 

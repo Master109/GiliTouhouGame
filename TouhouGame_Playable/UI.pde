@@ -99,6 +99,23 @@ void keyPressed()
     viewingHelpScreen = false;
     viewingAchievements = false;
   }
+  else if (keyCode == UP || keyCode == DOWN)
+  {
+    if (perkEquiped[12] == 1)
+    {
+      perkEquiped[12] = -1;
+      bulletSprayRange = 0;
+    }
+    else if (perkEquiped[12] == -1)
+    {
+      perkEquiped[12] = 1;
+      bulletSprayRange = HALF_PI;
+    }
+    if (perkEquiped[12] == -1)
+      buttons[13].text = "Equip [Alt]";
+    else if (perkEquiped[12] == 1)
+      buttons[13].text = "Unequip [Alt]";
+  }
   else if (key == '0' || key == ')')
     keys[6] = true;
   else if (key == '1' || key == '@')
