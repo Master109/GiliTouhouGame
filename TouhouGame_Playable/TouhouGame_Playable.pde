@@ -112,7 +112,7 @@ void setup()
   killsIntoScoreCost = 1;
   killsIntoScoreModifier = 0;
   bombNumCost = 5;
-  perkPoints = 100;
+  perkPoints = 6;
 
   font = createFont("Arial", FONT_SIZE);
   textFont(font);
