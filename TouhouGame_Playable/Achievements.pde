@@ -22,10 +22,10 @@ void showAchievementsNotifications()
     {
       level1KillsAchievementShow = false;
       notificationShowTimer = 0;
-      perkPoints += 4;
+      perkPoints += 5;
     }
 
-    showText("Achievement unlocked: Level 1 kills", width / 2, height);
+    showText("Achievement unlocked: Level 1 kills (1)", width / 2, height);
     return;
   }
 
