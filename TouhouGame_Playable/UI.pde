@@ -120,6 +120,8 @@ void keyPressed()
     keys[6] = true;
   else if (key == '1' || key == '@')
     keys[7] = true;
+  else if (key == '2' || key == '@')
+    keys[8] = true;
 }
 
 void keyReleased()
@@ -138,8 +140,10 @@ void keyReleased()
     keys[5] = false;
   else if (key == '0' || key == ')')
     keys[6] = false;
-  else if (key == '1' || key == '@')
+  else if (key == '1' || key == '!')
     keys[7] = false;
+  else if (key == '2' || key == '@')
+    keys[8] = false;
 }
 
 void mouseReleased()
@@ -171,6 +175,11 @@ void keyTimerStuff()
   else
     holdKeyTimers[1] = 0;
 
+  if (keys[8])
+    holdKeyTimers[2] ++;
+  else
+    holdKeyTimers[2] = 0;
+
   if (holdKeyTimers[0] >= 60)
   {
     currentLevel = 0;
@@ -187,6 +196,15 @@ void keyTimerStuff()
     inShop = false;
     reset();
   }
+  else if (holdKeyTimers[2] >= 60)
+  {
+    currentLevel = 2;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+    inShop = false;
+    reset();
+  }
   else if (holdKeyTimers[11] >= 60)
     reset();
 }
+

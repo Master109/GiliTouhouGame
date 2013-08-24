@@ -54,9 +54,9 @@ class BulletWiggle extends Bullet
       wiggleChangeTimer = 0;
     }
     wiggleChangeTimer ++;
-    
+
     loc.add(wiggleVel);
-    loc.add(vel);
+    super.run();
   }
 }
 

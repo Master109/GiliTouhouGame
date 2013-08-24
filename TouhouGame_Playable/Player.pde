@@ -91,7 +91,7 @@ class Player
     else if (keyCode == RIGHT)
       facingRight = true;
 
-    if (get(int(loc.x - (playerSize / 2)), int(loc.y)) == ENEMY_COLOR)
+    if (get(int(loc.x - (playerSize / 2)), int(loc.y)) == ENEMY_COLOR || get(int(loc.x - (playerSize / 2)), int(loc.y)) == color(0, 0, 255))
       shouldRestart = true;
   }
 

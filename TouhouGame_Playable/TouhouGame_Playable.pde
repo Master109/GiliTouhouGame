@@ -2,9 +2,11 @@ PFont font;
 
 Player p;
 Level1 l1;
+Level2 l2;
 Boss1 b1;
 
 String[] data;
+String[] data2;
 
 ArrayList<Enemy> enemies;
 ArrayList<Bullet> bullets, splitBullets;
@@ -63,6 +65,7 @@ boolean inShop;
 boolean viewingAchievements;
 boolean viewingSaveMenu;
 
+
 final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
 final color TERRAIN_COLOR = color(255);
@@ -75,7 +78,7 @@ final PVector NO_WAYPOINT = new PVector(-1, -1);
 
 void setup()
 {
-  size(925, 715, OPENGL);
+  size(925, 715, P3D, OPENGL);
   smooth();
 
   strokeWeight(5);
@@ -84,8 +87,12 @@ void setup()
   rectMode(CENTER);
   background(255);
 
-  data = loadStrings("Save Data.txt");
-
+  data2 = loadStrings("Save Data 2.txt");
+  if (data2[0] == "false")
+    data = loadStrings("Save Data.txt");
+  else
+    data = loadStrings("Initial Data.txt");
+  data2[0] = "false";
   perkEquiped = new int[BUTTON_NUM];
   perkEquiped[0] = int(data[14]);
   perkEquiped[2] = int(data[15]);
@@ -115,7 +122,7 @@ void setup()
   viewingBlendMode = false;
   viewingAchievements = false;
   inShop = false;
-  level1Complete = boolean(data[22]);
+  level1Complete = boolean(data[23]);
 
   currentLevel = -1;
   holdKeyTimers = new int[12];
@@ -162,7 +169,7 @@ void reset()
   {
     for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
     {
-      backgroundSquares[x][y] = new BackgroundSquare(new PVector(x, y), BACKGROUND_SQUARE_SPACING, new int[1]);
+      backgroundSquares[x][y] = new BackgroundSquare(new PVector(x, y, 10), BACKGROUND_SQUARE_SPACING, new int[1]);
     }
   }
 
@@ -199,28 +206,27 @@ void reset()
 
   if (currentLevel == 0)
   {
-    Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 70, 8, 160, 7.0, 8.5, true, false);
+    Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 70, 8, 160, 7.0, 8.5, true, false);
     enemies.add(e);
     while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
       e.loc.set(random(width), random(height), 01);
   }
 
   l1 = new Level1();
+  l2 = new Level2();
   b1 = new Boss1(new PVector(width, height / 2), new PVector(width, height / 2), NO_WAYPOINT, new PVector(), new PVector(width + 100, height / 2), 0, 0, 25, 0, 0, 0, 200, 400, 0, 65, 8, 160, 0, 10, 1.0, 8.5, 0);
 }
 
 void draw()
 {
-  showGrid();
-
   for (int i = 0; i < BUTTON_NUM; i ++)
     buttons[i].isVisible = false;
 
   if (viewingBlendMode)
     blendMode(SUBTRACT);
-  
+
   keyTimerStuff();
-  
+
   if (viewingHelpScreen)
   {
     background(127.5);
@@ -354,7 +360,7 @@ void draw()
               perkEquiped[4] = 1;
             perkPoints -= grazeIntoScoreCost;
             grazeIntoScoreCost ++;
-            grazeIntoScoreModifier += .225;
+            grazeIntoScoreModifier += .11;
           }
           else if (i == 6 && perkPoints >= killsIntoScoreCost)
           {
@@ -481,7 +487,7 @@ void draw()
     if (buttons[10].pressed && buttons[10].isVisible)
       saveMenu();
     if (buttons[11].pressed && buttons[11].isVisible)
-      data = loadStrings("Initial Data.txt");
+      data2[0] = "true";
     buttons[10].run();
     buttons[10].show();
     buttons[11].run();
@@ -525,6 +531,8 @@ void draw()
         for (int i = 1; i <= timesToRun; i ++)
           p.move();
 
+        //showGrid();
+
         fill(127.5, 175);
         rect(width / 2, height / 2, width, height + 2);
 
@@ -538,28 +546,28 @@ void draw()
             enemyAppearDeadlines[3] = 2750 / timesToRun;
             if (i == 0)
             {
-              Enemy e = new EnemyMoveTowardsPlayer(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 30, 10, 0, 60, 19, 7.0, 7.0, true, false);
+              Enemy e = new EnemyMoveTowardsPlayer(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 30, 10, 0, 60, 19, 7.0, 7.0, true, false);
               enemies.add(e);
-              while (e.loc.dist (p.loc) <= 450)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 1)
             {
-              Enemy e = new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 30, 0, 10, 14, .3, 7.0, 2.0, true, false);
+              Enemy e = new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 30, 0, 10, 14, .3, 7.0, 2.0, true, false);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 2)
             {
-              Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 65, 4, 160, 7.0, 8.5, true, false);
+              Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 65, 4, 160, 7.0, 8.5, true, false);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 3)
             {
-              Enemy e = new EnemyShootWigglyBulletSpread(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 25, 0, 30, 26, 2.0, 7.5, true, false);
+              Enemy e = new EnemyShootWigglyBulletSpread(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 17, 7, 30, 15, 0, 25, 25, 0, 30, 26, PI, 2.0, 7.5, TWO_PI, true, false);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
@@ -656,14 +664,111 @@ void draw()
 
       if (!paused)
       {
-        for (int x = BACKGROUND_SQUARE_SPACING / 2; x <= width; x += BACKGROUND_SQUARE_SPACING)
+        //gridShow();
+
+        for (int i = 1; i <= timesToRun; i ++)
         {
-          for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
+          playTimer += 1 / frameRate;
+        }
+
+        for (int i = 1; i <= timesToRun; i ++)
+          p.move();
+
+        fill(127.5, 175);
+        rect(width / 2, height / 2, width, height + 2);
+
+        for (int i = 1; i <= timesToRun; i ++)
+          l1.createEnemies();
+
+        for (int i = 0; i <= 5; i ++)
+        {
+          for (Bullet b : bullets)
           {
-            backgroundSquares[x][y].run();
-            backgroundSquares[x][y].show();
+            if (!b.exists)
+            {
+              bullets.remove(b);
+              break;
+            }
           }
         }
+        for (Bullet b : splitBullets)
+          bullets.add(b);
+
+        splitBullets.clear();
+
+        ArrayList<Enemy> survivingEnemies = new ArrayList<Enemy>();
+
+        for (Enemy e : enemies)
+        {
+          boolean survived = e.run();
+          if (survived)
+          {
+            e.show();
+            survivingEnemies.add(e);
+          }
+        }
+
+        enemies = survivingEnemies;
+
+        for (int i = 0; i <= mists.size(); i ++)
+        {
+          for (Mist m : mists)
+          {
+            if (!m.exists)
+            {
+              mists.remove(m);
+              break;
+            }
+          }
+        }
+
+        for (Bullet b : bullets)
+        {
+          for (int i = 1; i <= timesToRun; i ++)
+            b.run();
+          b.show();
+        }
+
+        for (Mist m : mists)
+        {
+          for (int i = 1; i <= timesToRun; i ++)
+            m.run();
+          m.show();
+        }
+
+        for (int i = 1; i <= timesToRun; i ++)
+          p.run();
+        p.show();
+      }
+
+      if (score >= 0)
+        level1Score1AchievementQueued = true;
+      if (!level1Score1AchievementEarned && level1Score1AchievementQueued && notificationShowTimer == 0)
+      {
+        level1Score1AchievementEarned = true;
+        level1Score1AchievementShow = true;
+      }
+      if (level1Score1AchievementShow)
+        notificationShowTimer ++;
+      if (kills == 9)
+        level1KillsAchievementQueued = true;
+      if (!level1KillsAchievementEarned && level1KillsAchievementQueued && notificationShowTimer == 0)
+      {
+        level1KillsAchievementEarned = true;
+        level1KillsAchievementShow = true;
+      }
+      if (level1KillsAchievementShow)
+        notificationShowTimer ++;
+    }
+    else if (currentLevel == 2)
+    {
+      if (shouldRestart)
+        return;
+
+      if (!paused)
+      {
+        //gridShow();
+
         for (int i = 1; i <= timesToRun; i ++)
         {
           playTimer += 1 / frameRate;
@@ -677,7 +782,7 @@ void draw()
         rect(width / 2, height / 2, width, height + 2);
 
         for (int i = 1; i <= timesToRun; i ++)
-          l1.createEnemies();
+          l2.createEnemies();
 
         for (int i = 0; i <= 5; i ++)
         {

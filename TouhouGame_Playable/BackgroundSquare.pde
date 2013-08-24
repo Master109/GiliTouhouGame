@@ -13,7 +13,7 @@ class BackgroundSquare
 
   void show()
   {
-    fill(127.5);
+    fill(0, 0);
     stroke(0, 255);
     rect(loc, backgroundSquareSize, backgroundSquareSize);
     noStroke();
