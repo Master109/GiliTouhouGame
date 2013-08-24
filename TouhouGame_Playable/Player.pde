@@ -28,6 +28,7 @@ class Player
     {
       translate(new PVector(loc.x - (playerSize / 2), loc.y));
       triangle(-playerSize, 0, playerSize, playerSize, playerSize, -playerSize);
+      translate(new PVector(-(loc.x - (playerSize / 2)), -loc.y));
     }
     else
     {

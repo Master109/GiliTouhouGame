@@ -206,7 +206,7 @@ void reset()
 
   if (currentLevel == 0)
   {
-    Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 70, 8, 160, 7.0, 8.5, true, false);
+    Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector[8], NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 70, 8, 160, 7.0, 8.5, true, false);
     enemies.add(e);
     while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
       e.loc.set(random(width), random(height), 01);
@@ -546,28 +546,36 @@ void draw()
             enemyAppearDeadlines[3] = 2750 / timesToRun;
             if (i == 0)
             {
-              Enemy e = new EnemyMoveTowardsPlayer(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 30, 10, 0, 60, 19, 7.0, 7.0, true, false);
+              Enemy e = new EnemyMoveTowardsPlayer(new PVector[8], new PVector(), new PVector(random(width), random(height)), 0, 30, 10, 0, 60, 19, 7.0, 7.0, true, false);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 1)
             {
-              Enemy e = new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 30, 0, 10, 14, .3, 7.0, 2.0, true, false);
+              Enemy e = new EnemyShootHeadOn(new PVector[8], new PVector(), new PVector(random(width), random(height)), 0, 25, 30, 0, 10, 14, .3, 7.0, 2.0, true, false);
+              e.wayPoints[0] = NO_WAYPOINT;
+              e.wayPoints[1] = NO_WAYPOINT;
+              e.wayPoints[2] = NO_WAYPOINT;
+              e.wayPoints[3] = NO_WAYPOINT;
+              e.wayPoints[4] = NO_WAYPOINT;
+              e.wayPoints[5] = NO_WAYPOINT;
+              e.wayPoints[6] = NO_WAYPOINT;
+              e.wayPoints[7] = NO_WAYPOINT;
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 2)
             {
-              Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 65, 4, 160, 7.0, 8.5, true, false);
+              Enemy e = new EnemyShootBulletStraightTowardsPredicted(new PVector[8], NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 65, 4, 160, 7.0, 8.5, true, false);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 3)
             {
-              Enemy e = new EnemyShootWigglyBulletSpread(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 17, 7, 30, 15, 0, 25, 25, 0, 30, 26, PI, 2.0, 7.5, TWO_PI, true, false);
+              Enemy e = new EnemyShootWigglyBulletSpread(new PVector[8], new PVector(), new PVector(random(width), random(height)), 17, 7, 30, 15, 0, 25, 25, 0, 30, 26, PI, 2.0, 7.5, TWO_PI, true, false);
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
@@ -772,7 +780,6 @@ void draw()
         for (int i = 1; i <= timesToRun; i ++)
         {
           playTimer += 1 / frameRate;
-          score -= 5 / frameRate;
         }
 
         for (int i = 1; i <= timesToRun; i ++)
