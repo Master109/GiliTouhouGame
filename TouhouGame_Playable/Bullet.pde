@@ -62,7 +62,11 @@ class Bullet
       float grazeIntoScoreModifier2 = 0;
       if (perkEquiped[4] == 1)
         grazeIntoScoreModifier2 = grazeIntoScoreModifier;
+<<<<<<< HEAD
       score += .5 + grazeIntoScoreModifier2;
+=======
+      score += .2 + grazeIntoScoreModifier2;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
       graze ++;
       if (currentLevel == 0)
         grazeAchievementCounter ++;

@@ -1,15 +1,27 @@
 abstract class Enemy
 {
+<<<<<<< HEAD
   PVector vel, loc, wayPoint0, wayPoint1, wayPoint2;
+=======
+  PVector vel, loc, wayPoint0, wayPoint1, wayPoint2, wayPoint3;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   int currentWayPoint, enemySize, hp, shootTimeCurrent, shootTimeDeadline, xpValue;
   float speed, bulletSpeed;
   boolean facingRight, destroyAfterDestination;
 
+<<<<<<< HEAD
   Enemy(PVector wayPoint0, PVector wayPoint1, PVector wayPoint2, PVector vel, PVector loc, int currentWayPoint, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, int xpValue, float speed, float bulletSpeed, boolean facingRight, boolean destroyAfterDestination)
+=======
+  Enemy(PVector wayPoint0, PVector wayPoint1, PVector wayPoint2, PVector wayPoint3, PVector vel, PVector loc, int currentWayPoint, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, int xpValue, float speed, float bulletSpeed, boolean facingRight, boolean destroyAfterDestination)
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   {
     this.wayPoint0 = wayPoint0;
     this.wayPoint1 = wayPoint1;
     this.wayPoint2 = wayPoint2;
+<<<<<<< HEAD
+=======
+    this.wayPoint3 = wayPoint3;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     this.vel = vel;
     this.loc = loc;
     this.enemySize = enemySize;
@@ -45,6 +57,7 @@ abstract class Enemy
   //Returns true when the enemy survives
   boolean run()
   {
+<<<<<<< HEAD
     if (loc.dist(wayPoint2) <= speed && destroyAfterDestination)
       return false;
     if (currentWayPoint == 0 && !wayPoint1.equals(NO_WAYPOINT))
@@ -53,6 +66,36 @@ abstract class Enemy
       vel.set(PVector.sub(loc, wayPoint2));
     if (currentWayPoint == 2 && !wayPoint0.equals(NO_WAYPOINT))
       vel.set(PVector.sub(wayPoint0, loc));
+=======
+    if (loc.dist(wayPoint3) <= speed && destroyAfterDestination)
+      return false;
+    if (currentWayPoint == -1 && !wayPoint1.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint1, loc));
+    if (currentWayPoint == -2 && !wayPoint2.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint2, loc));
+    if (currentWayPoint == -3 && !wayPoint3.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint3, loc));
+    if (currentWayPoint == -4 && !wayPoint0.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint0, loc));
+    if (loc.dist(wayPoint0) <= speed && !wayPoint1.equals(NO_WAYPOINT))
+      currentWayPoint = 1;
+    if (loc.dist(wayPoint1) <= speed && !wayPoint2.equals(NO_WAYPOINT))
+      currentWayPoint = 2;
+    if (loc.dist(wayPoint2) <= speed && !wayPoint3.equals(NO_WAYPOINT))
+      currentWayPoint = 3;
+    if (loc.dist(wayPoint3) <= speed && !wayPoint0.equals(NO_WAYPOINT))
+      currentWayPoint = 0;
+
+    if (currentWayPoint == 0 && !wayPoint1.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint1, loc));
+    if (currentWayPoint == 1 && !wayPoint2.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint2, loc));
+    if (currentWayPoint == 2 && !wayPoint3.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint3, loc));
+    if (currentWayPoint == 3 && !wayPoint0.equals(NO_WAYPOINT))
+      vel.set(PVector.sub(wayPoint0, loc));
+
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     vel.setMag(speed);
     loc.add(vel);
     if (loc.dist(wayPoint0) <= speed && !wayPoint1.equals(NO_WAYPOINT))
@@ -93,7 +136,30 @@ abstract class Enemy
   {
     PVector spreadLoc = copy(targetLoc);
     float m = spreadLoc.mag();
+<<<<<<< HEAD
     for (float a = spreadLoc.heading2D(); a <= spreadLoc.heading2D() + spreadRange * 2; a += spreadRange / bulletNum)
+=======
+    bullets.add(new BulletWiggle(targetLoc, copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    for (float a = spreadLoc.heading2D() + (spreadRange / bulletNum / 2); a <= targetLoc.heading2D() + (spreadRange / 2); a += spreadRange / bulletNum / 2)
+    {
+      spreadLoc.x = m * cos(a);
+      spreadLoc.y = m * sin(a);
+      bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    }
+    spreadLoc = copy(targetLoc);
+    for (float a = spreadLoc.heading2D() - (spreadRange / bulletNum / 2); a >= targetLoc.heading2D() - (spreadRange / 2); a -= spreadRange / bulletNum / 2)
+    {
+      spreadLoc.x = m * cos(a);
+      spreadLoc.y = m * sin(a);
+      bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
+    }
+  }
+  void shootBulletWiggleTowards2(PVector targetLoc, PVector wiggleVel, float rotateAmount, float spreadRange, float bulletSpeed, int wiggleChangeDeadline, int wiggleChangeTimer, int wiggleAmount, int bulletSize, int bulletNum)
+  {
+    PVector spreadLoc = copy(targetLoc);
+    float m = spreadLoc.mag();
+    for (float a = spreadLoc.heading2D(); a <= targetLoc.heading2D() + spreadRange; a += spreadRange / bulletNum)
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     {
       bullets.add(new BulletWiggle(copy(spreadLoc), copy(loc), bulletSize, wiggleAmount, wiggleChangeTimer, wiggleChangeDeadline, -1, -1, bulletSpeed, rotateAmount, false));
       spreadLoc.x = m * cos(a);

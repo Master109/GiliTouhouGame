@@ -99,10 +99,35 @@ void keyPressed()
     viewingHelpScreen = false;
     viewingAchievements = false;
   }
+<<<<<<< HEAD
+=======
+  else if (keyCode == UP || keyCode == DOWN)
+  {
+    if (perkEquiped[12] == 1)
+    {
+      perkEquiped[12] = -1;
+      bulletSprayRange = 0;
+    }
+    else if (perkEquiped[12] == -1)
+    {
+      perkEquiped[12] = 1;
+      bulletSprayRange = HALF_PI;
+    }
+    if (perkEquiped[12] == -1)
+      buttons[13].text = "Equip [Alt]";
+    else if (perkEquiped[12] == 1)
+      buttons[13].text = "Unequip [Alt]";
+  }
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   else if (key == '0' || key == ')')
     keys[6] = true;
   else if (key == '1' || key == '@')
     keys[7] = true;
+<<<<<<< HEAD
+=======
+  else if (key == '2' || key == '@')
+    keys[8] = true;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 }
 
 void keyReleased()
@@ -121,8 +146,15 @@ void keyReleased()
     keys[5] = false;
   else if (key == '0' || key == ')')
     keys[6] = false;
+<<<<<<< HEAD
   else if (key == '1' || key == '@')
     keys[7] = false;
+=======
+  else if (key == '1' || key == '!')
+    keys[7] = false;
+  else if (key == '2' || key == '@')
+    keys[8] = false;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 }
 
 void mouseReleased()
@@ -137,3 +169,56 @@ void mouseReleased()
   }
 }
 
+<<<<<<< HEAD
+=======
+//This is called by draw
+void keyTimerStuff()
+{
+  if (keys[5])
+    holdKeyTimers[11] ++;
+  else
+    holdKeyTimers[11] = 0;
+  if (keys[6])
+    holdKeyTimers[0] ++;
+  else
+    holdKeyTimers[0] = 0;
+
+  if (keys[7])
+    holdKeyTimers[1] ++;
+  else
+    holdKeyTimers[1] = 0;
+
+  if (keys[8])
+    holdKeyTimers[2] ++;
+  else
+    holdKeyTimers[2] = 0;
+
+  if (holdKeyTimers[0] >= 60)
+  {
+    currentLevel = 0;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+    inShop = false;
+    reset();
+  }
+  else if (holdKeyTimers[1] >= 60)
+  {
+    currentLevel = 1;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+    inShop = false;
+    reset();
+  }
+  else if (holdKeyTimers[2] >= 60)
+  {
+    currentLevel = 2;
+    viewingHelpScreen = false;
+    viewingAchievements = false;
+    inShop = false;
+    reset();
+  }
+  else if (holdKeyTimers[11] >= 60)
+    reset();
+}
+
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81

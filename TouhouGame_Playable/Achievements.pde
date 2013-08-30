@@ -8,6 +8,10 @@ void showAchievementsNotifications()
       {
         grazeAchievementShow[index] = false;
         notificationShowTimer = 0;
+<<<<<<< HEAD
+=======
+        perkPoints += index + 1;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
       }
 
       showText("Achievement unlocked: Graze combo (" + (index + 1) + ")", width / 2, height);
@@ -21,6 +25,10 @@ void showAchievementsNotifications()
     {
       level1KillsAchievementShow = false;
       notificationShowTimer = 0;
+<<<<<<< HEAD
+=======
+      perkPoints += 5;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     }
 
     showText("Achievement unlocked: Level 1 kills (1)", width / 2, height);
@@ -33,6 +41,10 @@ void showAchievementsNotifications()
     {
       level1Score1AchievementShow = false;
       notificationShowTimer = 0;
+<<<<<<< HEAD
+=======
+      perkPoints += 1;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     }
 
     showText("Achievement unlocked: Level 1 score (1)", width / 2, height);

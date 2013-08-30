@@ -2,9 +2,17 @@ PFont font;
 
 Player p;
 Level1 l1;
+<<<<<<< HEAD
 Boss1 b1;
 
 String[] data;
+=======
+Level2 l2;
+Boss1 b1;
+
+String[] data;
+String[] data2;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
 ArrayList<Enemy> enemies;
 ArrayList<Bullet> bullets, splitBullets;
@@ -12,6 +20,10 @@ ArrayList<Mist> mists;
 ArrayList<Float> highScores;
 
 Button[] buttons;
+<<<<<<< HEAD
+=======
+BackgroundSquare[][] backgroundSquares;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
 int[] perkEquiped;
 int[] holdKeyTimers;
@@ -29,6 +41,10 @@ int timeIntoScoreCost;
 int grazeIntoScoreCost;
 int killsIntoScoreCost;
 int bombNumCost;
+<<<<<<< HEAD
+=======
+int bulletSprayCost;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 int perkPoints;
 
 float[] enemyAppearDeadlines;
@@ -38,6 +54,7 @@ float timeIntoScoreModifier;
 float grazeIntoScoreModifier;
 float killsIntoScoreModifier;
 float playTimer;
+float bulletSprayRange;
 
 boolean[] keys;
 boolean autoFire;
@@ -48,6 +65,10 @@ boolean showEffects;
 boolean levelComplete;
 boolean level1KillsAchievementShow;
 boolean level1Score1AchievementShow;
+<<<<<<< HEAD
+=======
+boolean level1Complete;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
 boolean[] grazeAchievementQueued, grazeAchievementEarned, grazeAchievementShow;
 boolean level1KillsAchievementQueued;
@@ -58,20 +79,34 @@ boolean viewingBlendMode;
 boolean inShop;
 boolean viewingAchievements;
 boolean viewingSaveMenu;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
 final color ENEMY_COLOR = color(255, 0, 0);
 final color BULLET_WIGGLE_COLOR = color(0, 0, 255);
 final color TERRAIN_COLOR = color(255);
 final int NUM_OF_ENEMY_TYPES = 4;
+<<<<<<< HEAD
 final int BUTTON_NUM = 12;
 final int NUM_ACHIEVEMENTS = 3;
+=======
+final int BUTTON_NUM = 14;
+final int NUM_ACHIEVEMENTS = 3;
+final int BACKGROUND_SQUARE_SPACING = 25;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 final float FONT_SIZE = 27;
 final PVector NO_WAYPOINT = new PVector(-1, -1);
 
 void setup()
 {
+<<<<<<< HEAD
 
   size(925, 715, OPENGL);
+=======
+  size(925, 715, P3D, OPENGL);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   smooth();
 
   strokeWeight(5);
@@ -80,14 +115,27 @@ void setup()
   rectMode(CENTER);
   background(255);
 
+<<<<<<< HEAD
   data = loadStrings("Save Data.txt");
 
+=======
+  data2 = loadStrings("Save Data 2.txt");
+  if (data2[0] == "false")
+    data = loadStrings("Save Data.txt");
+  else
+    data = loadStrings("Initial Data.txt");
+  data2[0] = "false";
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   perkEquiped = new int[BUTTON_NUM];
   perkEquiped[0] = int(data[14]);
   perkEquiped[2] = int(data[15]);
   perkEquiped[4] = int(data[16]);
   perkEquiped[6] = int(data[17]);
   perkEquiped[8] = int(data[18]);
+<<<<<<< HEAD
+=======
+  perkEquiped[12] = int(data[21]);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   currentHelpScreen = 0;
   notificationShowTimer = 0;
   perkPoints = int(data[0]);
@@ -110,6 +158,10 @@ void setup()
   viewingBlendMode = false;
   viewingAchievements = false;
   inShop = false;
+<<<<<<< HEAD
+=======
+  level1Complete = boolean(data[23]);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
   currentLevel = -1;
   holdKeyTimers = new int[12];
@@ -122,6 +174,10 @@ void setup()
   killsIntoScoreCost = int(data[6]);
   killsIntoScoreModifier = int(data[7]);
   bombNumCost = int(data[8]);
+<<<<<<< HEAD
+=======
+  bulletSprayCost = 4;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
   font = createFont("Arial", FONT_SIZE);
   textFont(font);
@@ -129,6 +185,10 @@ void setup()
   highScores = new ArrayList<Float>();
   highScores.add(float(data[19]));
   highScores.add(float(data[20]));
+<<<<<<< HEAD
+=======
+  backgroundSquares = new BackgroundSquare[999][999];
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   buttons = new Button[BUTTON_NUM];
   buttons[0] = new Button(new PVector(250, 125), FONT_SIZE, "Reload Speed - $" + reloadSpeedCost);
   buttons[1] = new Button(new PVector(250, 225), FONT_SIZE, "Unequip");
@@ -142,12 +202,25 @@ void setup()
   buttons[9] = new Button(new PVector(250, 425), FONT_SIZE, "Unequip");
   buttons[10] = new Button(new PVector(width / 2 - 100, height / 2), FONT_SIZE, "Save");  
   buttons[11] = new Button(new PVector(width / 2 + 100, height / 2), FONT_SIZE, "Reset");
+<<<<<<< HEAD
+=======
+  buttons[12] = new Button(new PVector(250, 525), FONT_SIZE, "Bullet Spread - $" + bulletSprayCost);  
+  buttons[13] = new Button(new PVector(250, 625), FONT_SIZE, "Unequip [Up or Down]");
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
   reset();
 }
 
 void reset()
 {
+  for (int x = BACKGROUND_SQUARE_SPACING / 2; x <= width; x += BACKGROUND_SQUARE_SPACING)
+  {
+    for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
+    {
+      backgroundSquares[x][y] = new BackgroundSquare(new PVector(x, y, 10), BACKGROUND_SQUARE_SPACING, new int[1]);
+    }
+  }
+
   paused = false;
   shouldRestart = false;
   levelComplete = false;
@@ -181,13 +254,21 @@ void reset()
 
   if (currentLevel == 0)
   {
+<<<<<<< HEAD
     Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 70, 8, 160, 7.0, 8.5, true, false);
+=======
+    Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 70, 8, 160, 7.0, 8.5, true, false);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     enemies.add(e);
     while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
       e.loc.set(random(width), random(height), 01);
   }
 
   l1 = new Level1();
+<<<<<<< HEAD
+=======
+  l2 = new Level2();
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   b1 = new Boss1(new PVector(width, height / 2), new PVector(width, height / 2), NO_WAYPOINT, new PVector(), new PVector(width + 100, height / 2), 0, 0, 25, 0, 0, 0, 200, 400, 0, 65, 8, 160, 0, 10, 1.0, 8.5, 0);
 }
 
@@ -195,6 +276,7 @@ void draw()
 {
   for (int i = 0; i < BUTTON_NUM; i ++)
     buttons[i].isVisible = false;
+<<<<<<< HEAD
 
   if (viewingBlendMode)
     blendMode(SUBTRACT);
@@ -230,6 +312,14 @@ void draw()
   }
   else if (holdKeyTimers[11] >= 60)
     reset();
+=======
+
+  if (viewingBlendMode)
+    blendMode(SUBTRACT);
+
+  keyTimerStuff();
+
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   if (viewingHelpScreen)
   {
     background(127.5);
@@ -310,7 +400,11 @@ void draw()
     buttons[4].isVisible = true;
     buttons[6].isVisible = true;
     buttons[8].isVisible = true;
+<<<<<<< HEAD
     buttons[0].isVisible = true;
+=======
+    buttons[12].isVisible = true;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     if (reloadSpeedCost > 2)
       buttons[1].isVisible = true; 
     if (timeIntoScoreCost > 1)
@@ -321,6 +415,11 @@ void draw()
       buttons[7].isVisible = true;
     if (bombNumCost > 5)
       buttons[9].isVisible = true;
+<<<<<<< HEAD
+=======
+    if (bulletSprayCost > 4)
+      buttons[13].isVisible = true;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     for (int i = 0; i < BUTTON_NUM; i ++)
     {
       if (buttons[i].isVisible)
@@ -337,13 +436,30 @@ void draw()
               reloadSpeedCost ++;
             }
           }
+<<<<<<< HEAD
+=======
+          else if (i == 12 && perkPoints >= bulletSprayCost)
+          {
+            if (bulletSprayCost <= 4)
+            {
+              if (perkEquiped[12] == 0)
+                perkEquiped[12] = 1;
+              perkPoints -= bulletSprayCost;
+              bulletSprayCost ++;
+            }
+          }
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
           else if (i == 2 && perkPoints >= timeIntoScoreCost)
           {
             if (perkEquiped[2] == 0)
               perkEquiped[2] = 1;
             perkPoints -= timeIntoScoreCost;
             timeIntoScoreCost ++;
+<<<<<<< HEAD
             timeIntoScoreModifier += .08;
+=======
+            timeIntoScoreModifier += .09;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
           }
           else if (i == 4 && perkPoints >= grazeIntoScoreCost)
           {
@@ -351,7 +467,11 @@ void draw()
               perkEquiped[4] = 1;
             perkPoints -= grazeIntoScoreCost;
             grazeIntoScoreCost ++;
+<<<<<<< HEAD
             grazeIntoScoreModifier += .225;
+=======
+            grazeIntoScoreModifier += .11;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
           }
           else if (i == 6 && perkPoints >= killsIntoScoreCost)
           {
@@ -359,7 +479,11 @@ void draw()
               perkEquiped[6] = 1;
             perkPoints -= killsIntoScoreCost;
             killsIntoScoreCost ++;
+<<<<<<< HEAD
             killsIntoScoreModifier += 2.25;
+=======
+            killsIntoScoreModifier += 2.5;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
           }
           else if (i == 8 && perkPoints >= bombNumCost)
           {
@@ -393,7 +517,11 @@ void draw()
           {
             if (perkEquiped[6] == 1)
               perkEquiped[6] = -1;
+<<<<<<< HEAD
             else if (perkEquiped[4] == -1)
+=======
+            else if (perkEquiped[6] == -1)
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
               perkEquiped[6] = 1;
           }
           else if (i == 9)
@@ -409,22 +537,49 @@ void draw()
               bombNum += bombNumCost - 5;
             }
           }
+<<<<<<< HEAD
+=======
+          else if (i == 13)
+          {
+            if (perkEquiped[12] == 1)
+            {
+              perkEquiped[12] = -1;
+              bulletSprayRange = 0;
+            }
+            else if (perkEquiped[12] == -1)
+            {
+              perkEquiped[12] = 1;
+              bulletSprayRange = HALF_PI;
+            }
+          }
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
         }
         buttons[i].run();
         buttons[i].show();
         buttons[i].pressed = false;
       }
     }
+<<<<<<< HEAD
     if (reloadSpeedCost == 6)
     {            
       buttons[0].text = "Reload Speed (MAX)";
       perkEquiped[0] = 2;
     }
+=======
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     buttons[0].text = "Reload Speed - $" + reloadSpeedCost;
     buttons[2].text = "Time Into Score - $" + timeIntoScoreCost;
     buttons[4].text = "Graze Into Score - $" + grazeIntoScoreCost;
     buttons[6].text = "Kills Into Score - $" + killsIntoScoreCost;
     buttons[8].text = "Bombs - $" + bombNumCost;
+<<<<<<< HEAD
+=======
+    buttons[12].text = "Bullet Spread - $" + bulletSprayCost;
+    if (reloadSpeedCost == 7)
+      buttons[0].text = "Reload Speed (MAX)";
+    if (bulletSprayCost == 5)
+      buttons[12].text = "Bullet Spread (MAX)";
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     if (perkEquiped[0] == -1)
       buttons[1].text = "Equip";
     else if (perkEquiped[0] == 1)
@@ -445,6 +600,13 @@ void draw()
       buttons[9].text = "Equip";
     else if (perkEquiped[8] == 1)
       buttons[9].text = "Unequip";
+<<<<<<< HEAD
+=======
+    if (perkEquiped[12] == -1)
+      buttons[13].text = "Equip [Up / Down]";
+    else if (perkEquiped[12] == 1)
+      buttons[13].text = "Unequip [Up / Down]";
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   }
 
   else if (viewingAchievements)
@@ -458,6 +620,7 @@ void draw()
     background(127.5);
     buttons[10].isVisible = true;
     buttons[11].isVisible = true;
+<<<<<<< HEAD
     for (int i = 0; i < BUTTON_NUM; i ++)
     {
       if (buttons[i].isVisible)
@@ -474,6 +637,18 @@ void draw()
         buttons[i].pressed = false;
       }
     }
+=======
+    if (buttons[10].pressed && buttons[10].isVisible)
+      saveMenu();
+    if (buttons[11].pressed && buttons[11].isVisible)
+      data2[0] = "true";
+    buttons[10].run();
+    buttons[10].show();
+    buttons[11].run();
+    buttons[11].show();
+    buttons[10].pressed = false;
+    buttons[11].pressed = false;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
   }
 
   if (!viewingHelpScreen && !viewingAchievements && !inShop && !viewingSaveMenu)
@@ -511,6 +686,8 @@ void draw()
         for (int i = 1; i <= timesToRun; i ++)
           p.move();
 
+        //showGrid();
+
         fill(127.5, 175);
         rect(width / 2, height / 2, width, height + 2);
 
@@ -524,34 +701,52 @@ void draw()
             enemyAppearDeadlines[3] = 2750 / timesToRun;
             if (i == 0)
             {
+<<<<<<< HEAD
               Enemy e = new EnemyMoveTowardsPlayer(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 30, 10, 0, 60, 19, 7.0, 7.0, true, false);
+=======
+              Enemy e = new EnemyMoveTowardsPlayer(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 30, 10, 0, 60, 19, 7.0, 7.0, true, false);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
               enemies.add(e);
-              while (e.loc.dist (p.loc) <= 450)
+              while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 1)
             {
+<<<<<<< HEAD
               Enemy e = new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 30, 0, 10, 14, .3, 7.0, 2.0, true, false);
+=======
+              Enemy e = new EnemyShootHeadOn(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 30, 0, 10, 14, .3, 7.0, 2.0, true, false);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 2)
             {
+<<<<<<< HEAD
               Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 65, 4, 160, 7.0, 8.5, true, false);
+=======
+              Enemy e = new EnemyShootBulletStraightTowardsPredicted(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 15, 0, 65, 4, 160, 7.0, 8.5, true, false);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             } 
             else if (i == 3)
             {
+<<<<<<< HEAD
               Enemy e = new EnemyShootWigglyBulletSpread(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 0, 25, 25, 0, 30, 26, 2.0, 7.5, true, false);
+=======
+              Enemy e = new EnemyShootWigglyBulletSpread(NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, NO_WAYPOINT, new PVector(), new PVector(random(width), random(height)), 17, 7, 30, 15, 0, 25, 25, 0, 30, 26, PI, 2.0, 7.5, TWO_PI, true, false);
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
               enemies.add(e);
               while (e.loc.dist (new PVector (p.loc.x - (p.playerSize / 2), p.loc.y)) <= 450)
                 e.loc.set(random(width), random(height), 0);
             }
             enemyAppearTimes[i] = 0;
             enemyAppearDeadlines[i] *= .925;
+<<<<<<< HEAD
+=======
           }
         }
 
@@ -572,6 +767,124 @@ void draw()
 
         splitBullets.clear();
 
+        for (Enemy e : enemies)
+        {
+          boolean survived = e.run();
+          if (survived)
+          {
+            e.show();
+            survivingEnemies.add(e);
+          }
+        }
+
+        enemies = survivingEnemies;
+
+        for (int i = 0; i <= mists.size(); i ++)
+        {
+          for (Mist m : mists)
+          {
+            if (!m.exists)
+            {
+              mists.remove(m);
+              break;
+            }
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
+          }
+        }
+
+        for (int i = 0; i <= 5; i ++)
+        {
+<<<<<<< HEAD
+          for (Bullet b : bullets)
+          {
+            if (!b.exists)
+            {
+              bullets.remove(b);
+              break;
+            }
+=======
+          for (int i = 1; i <= timesToRun; i ++)
+            b.run();
+          b.show();
+        }
+
+        if (previousGrazeAchievementCounter == grazeAchievementCounter)
+          grazeAchievementCounter = 0;
+
+        previousGrazeAchievementCounter = grazeAchievementCounter;
+
+        for (Mist m : mists)
+        {
+          for (int i = 1; i <= timesToRun; i ++)
+            m.run();
+          m.show();
+        }
+
+        for (int i = 1; i <= timesToRun; i ++)
+          p.run();
+        p.show();
+
+        for (int index = 0; index < NUM_ACHIEVEMENTS; index ++)
+        {
+          if (grazeAchievementCounter >= (index + 1) * 10)
+            grazeAchievementQueued[index] = true;
+
+          if (!grazeAchievementEarned[index] && grazeAchievementQueued[index])
+          {
+            grazeAchievementEarned[index] = true;
+            grazeAchievementShow[index] = true;
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
+          }
+
+          if (grazeAchievementShow[index])
+            notificationShowTimer ++;
+        }
+      }
+    }
+    else if (currentLevel == 1)
+    {
+      if (shouldRestart)
+        return;
+
+      if (!paused)
+      {
+        //gridShow();
+
+        for (int i = 1; i <= timesToRun; i ++)
+        {
+          playTimer += 1 / frameRate;
+        }
+
+        for (int i = 1; i <= timesToRun; i ++)
+          p.move();
+
+        fill(127.5, 175);
+        rect(width / 2, height / 2, width, height + 2);
+
+        for (int i = 1; i <= timesToRun; i ++)
+          l1.createEnemies();
+
+        for (int i = 0; i <= 5; i ++)
+        {
+          for (Bullet b : bullets)
+          {
+            if (!b.exists)
+            {
+              bullets.remove(b);
+              break;
+            }
+          }
+        }
+        for (Bullet b : splitBullets)
+          bullets.add(b);
+
+        splitBullets.clear();
+
+<<<<<<< HEAD
+=======
+        ArrayList<Enemy> survivingEnemies = new ArrayList<Enemy>();
+
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
         for (Enemy e : enemies)
         {
           boolean survived = e.run();
@@ -634,14 +947,38 @@ void draw()
             notificationShowTimer ++;
         }
       }
+
+      if (score >= 0)
+        level1Score1AchievementQueued = true;
+      if (!level1Score1AchievementEarned && level1Score1AchievementQueued && notificationShowTimer == 0)
+      {
+        level1Score1AchievementEarned = true;
+        level1Score1AchievementShow = true;
+      }
+      if (level1Score1AchievementShow)
+        notificationShowTimer ++;
+      if (kills == 9)
+        level1KillsAchievementQueued = true;
+      if (!level1KillsAchievementEarned && level1KillsAchievementQueued && notificationShowTimer == 0)
+      {
+        level1KillsAchievementEarned = true;
+        level1KillsAchievementShow = true;
+      }
+      if (level1KillsAchievementShow)
+        notificationShowTimer ++;
     }
-    else if (currentLevel == 1)
+    else if (currentLevel == 2)
     {
       if (shouldRestart)
         return;
 
       if (!paused)
       {
+<<<<<<< HEAD
+=======
+        //gridShow();
+
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
         for (int i = 1; i <= timesToRun; i ++)
         {
           playTimer += 1 / frameRate;
@@ -655,7 +992,11 @@ void draw()
         rect(width / 2, height / 2, width, height + 2);
 
         for (int i = 1; i <= timesToRun; i ++)
+<<<<<<< HEAD
           l1.createEnemies();
+=======
+          l2.createEnemies();
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
 
         for (int i = 0; i <= 5; i ++)
         {
@@ -752,10 +1093,31 @@ void draw()
     showAchievementsNotifications();
 
     if (levelComplete)
+<<<<<<< HEAD
     {
       textAlign(CENTER, CENTER);
       text("Congratz!", width / 2, height / 2);
       perkPoints += 3;
+=======
+    {
+      if (currentLevel == 1)
+        level1Complete = true;
+      textAlign(CENTER, CENTER);
+      text("Congratz!", width / 2, height / 2);
+      perkPoints += 3;
+    }
+  }
+}
+
+void showGrid()
+{
+  for (int x = BACKGROUND_SQUARE_SPACING / 2; x <= width; x += BACKGROUND_SQUARE_SPACING)
+  {
+    for (int y = BACKGROUND_SQUARE_SPACING / 2; y <= height; y += BACKGROUND_SQUARE_SPACING)
+    {
+      backgroundSquares[x][y].run();
+      backgroundSquares[x][y].show();
+>>>>>>> 665ba591d88ec9f154f064759fa2dea03e21ab81
     }
   }
 }
