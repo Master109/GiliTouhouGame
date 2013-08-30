@@ -12,6 +12,7 @@ class BulletWiggle extends Bullet
     this.wiggleAmount = wiggleAmount;
     this.wiggleChangeTimer = 0;
     this.wiggleChangeDeadline = wiggleChangeDeadline;
+    this.rotateAmount = rotateAmount;
     this.hasWiggled = false;
   }
 
@@ -28,31 +29,32 @@ class BulletWiggle extends Bullet
   void run()
   {
     vel.limit(speed);
-    if (wiggleChangeTimer >= 15)
+    if (wiggleChangeTimer >= wiggleChangeDeadline)
     {
-      float m = 7;
+      float m = wiggleAmount;
       if (!hasWiggled)
       {
         wiggleVel.set(vel);
         float a = wiggleVel.heading2D();
         hasWiggled = true;
-        a -= 3 / 2;
+        a -= rotateAmount / 2;
         wiggleVel.x = m * cos(a);
         wiggleVel.y = m * sin(a);
       }
       else
       {
         float a = wiggleVel.heading2D();
-        if (a == vel.heading2D() + 1.5)
-          a -= 3;
+        if (a == vel.heading2D() + (rotateAmount / 2))
+          a -= rotateAmount;
         else
-          a += 3;
+          a += rotateAmount;
         wiggleVel.x = m * cos(a);
         wiggleVel.y = m * sin(a);
       }
       wiggleChangeTimer = 0;
     }
     wiggleChangeTimer ++;
+    
     loc.add(wiggleVel);
     loc.add(vel);
   }

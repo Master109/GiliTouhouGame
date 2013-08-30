@@ -19,21 +19,23 @@ class Player
 
   void show()
   {
-    fill(0, 255, 0);
+    fill(127.5);
+    stroke(0, 255, 0);
+
+    pushMatrix();
     if (!facingRight)
     {
       translate(new PVector(loc.x - (playerSize / 2), loc.y));
       triangle(-playerSize, 0, playerSize, playerSize, playerSize, -playerSize);
-      translate(new PVector(-(loc.x - (playerSize / 2)), -loc.y));
     }
     else
     {
       translate(new PVector(loc.x - (playerSize / 2), loc.y));
       rotate(PI);
       triangle(-playerSize, 0, playerSize, playerSize, playerSize, -playerSize);
-      rotate(-PI);
-      translate(new PVector(-(loc.x - (playerSize / 2)), -loc.y));
     }
+    popMatrix();
+
     stroke(255, 0, 0);
     strokeWeight(10);
     point(new PVector(loc.x - (playerSize / 2), loc.y));
@@ -43,7 +45,10 @@ class Player
 
   void run()
   {
-    if (shootTime >= 5 && (mousePressed || autoFire))
+    int reloadSpeed = 1;
+    if (perkEquiped[0] == 1)
+      reloadSpeed = reloadSpeedCost - 1;
+    if (shootTime >= 6 - (reloadSpeed - 1) && (mousePressed || autoFire))
     {
       final int BULLET_SPEED = 999999999;
       PVector direction;
@@ -63,7 +68,7 @@ class Player
     else if (keyCode == RIGHT)
       facingRight = true;
 
-    if (get(int(loc.x - (playerSize / 2)), int(loc.y)) == ENEMY_COLOR || get(int(loc.x - (playerSize / 2)), int(loc.y)) == BULLET_WIGGLE_COLOR)
+    if (get(int(loc.x - (playerSize / 2)), int(loc.y)) == ENEMY_COLOR)
       shouldRestart = true;
   }
 
@@ -90,7 +95,7 @@ class Player
     }
     nextLoc.set(PVector.add(loc, vel));
 
-    boolean onMap = nextLoc.x > 0 && nextLoc.x < width && nextLoc.y > 0 && nextLoc.y < height;
+    boolean onMap = nextLoc.x - (playerSize / 2) > 0 && nextLoc.x - (playerSize / 2) < width && nextLoc.y > 0 && nextLoc.y < height;
     if (onMap)
       loc.set(nextLoc);
   }
